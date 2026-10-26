@@ -31,7 +31,7 @@ h1{font-size:26px;font-weight:800;margin:0 0 4px}.mu{color:var(--mu)}
 .sel .sh{stroke:var(--ac);stroke-width:3}.lb{font:12px sans-serif;fill:var(--mu);text-anchor:middle}
 .hd{fill:var(--ac);stroke:var(--pn);stroke-width:2;opacity:0;cursor:crosshair}g[data-n]:hover .hd,.sel .hd{opacity:1}.bL{font-weight:600}label{display:block;margin:8px 0 2px;color:var(--mu);font-size:12px}
 .msg{border-inline-start:3px solid var(--mu);padding:4px 8px;margin:4px 0;background:var(--bg);cursor:pointer;font-size:12px}.msg.e{border-color:var(--er)}.msg.w{border-color:var(--wr)}
-#dlg{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;z-index:9}#dlg>div{background:var(--pn);padding:18px;border-radius:10px;width:min(380px,92vw)}
+#dlg{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;z-index:9}#dlg>div{background:var(--pn);padding:18px;border-radius:10px;width:min(580px,92vw);max-height:90vh;overflow:auto}#rob{display:none;margin:0}.ro #rob{display:inline-flex;gap:6px;align-items:center}.ro #tools,.ro #bUn,.ro #bRe,.ro #bImp2,.ro .hd{display:none}
 @media(max-width:760px){#main{grid-template-columns:100px 1fr}#side{position:fixed;bottom:0;inset-inline:0;max-height:42%;border-top:1px solid var(--ln)}}
 </style>
 </head>
@@ -48,10 +48,10 @@ h1{font-size:26px;font-weight:800;margin:0 0 4px}.mu{color:var(--mu)}
 </div>
 <div id="ed">
   <div id="top">
-    <button id="bBack">پروژه‌ها</button><b id="pn"></b><span class="mu" id="st"></span>
+    <button id="bBack">پروژه‌ها</button><b id="pn"></b><span class="mu" id="st"></span><span id="rob" class="msg w">حالت فقط‌خواندنی <button id="bCopy" class="pr">ساخت نسخه‌ی من</button></span>
     <span style="flex:1"></span>
     <button id="bUn">واگرد</button><button id="bRe">ازنو</button><button id="bVal">اعتبارسنجی</button><button id="bFit">نمایش همه</button>
-    <button id="bGrid">شبکه</button><button class="bL">EN</button><button id="bExj">JSON</button><button id="bExs">SVG</button><button id="bImp2">Import</button>
+    <button id="bGrid">شبکه</button><button class="bL">EN</button><button id="bExj">JSON</button><button id="bExs">SVG</button><button id="bSql">SQL</button><button id="bShare" class="pr">اشتراک</button><button id="bImp2">Import</button>
   </div>
   <div id="main">
     <div id="tools"></div>
@@ -72,9 +72,9 @@ let db;const dbo=()=>db||(db=new Promise((res,rej)=>{const r=indexedDB.open('ers
 async function tx(m,f){const d=await dbo();return new Promise((res,rej)=>{const t=d.transaction('p',m),s=t.objectStore('p'),r=f(s);t.oncomplete=()=>res(r.result);t.onerror=()=>rej(t.error)})}
 const dbAll=()=>tx('readonly',s=>s.getAll()),dbPut=p=>tx('readwrite',s=>s.put(p)),dbDel=id=>tx('readwrite',s=>s.delete(id));
 function stat(t){$('#st').textContent=t}
-function save(){stat('در حال ذخیره…');clearTimeout(tmr);tmr=setTimeout(flush,350)}
-async function flush(){if(!P)return;try{P.updated=Date.now();await dbPut(P);stat('ذخیره شد')}catch(e){stat('ذخیره ناموفق بود')}}
-addEventListener('beforeunload',()=>{if(P)dbPut(P)});
+function save(){if(RO)return;stat('در حال ذخیره…');clearTimeout(tmr);tmr=setTimeout(flush,350)}
+async function flush(){if(!P||RO)return;try{P.updated=Date.now();await dbPut(P);stat('ذخیره شد')}catch(e){stat('ذخیره ناموفق بود')}}
+addEventListener('beforeunload',()=>{if(P&&!RO)dbPut(P)});
 /* ---------- model ---------- */
 const nn=(p,t,name,x,y,o={})=>{const n={id:uid(),type:t,name,x,y,...o};p.nodes.push(n);return n};
 const ee=(p,a,b,o={})=>{const e={id:uid(),a:a.id,b:b.id,total:false,card:'',role:'',...o};p.edges.push(e);return e};
@@ -85,7 +85,7 @@ const a=nn(p,'key','StudentID',60,80),b=nn(p,'attr','Name',200,80),d=nn(p,'key',
 ee(p,s,a);ee(p,s,b);ee(p,c,d);ee(p,r,g);return p}
 const nb=(p,id)=>p.edges.filter(e=>e.a===id||e.b===id).map(e=>[e,p.nodes.find(n=>n.id===(e.a===id?e.b:e.a))]);
 /* ---------- home ---------- */
-async function home(){P=null;$('#ed').style.display='none';$('#home').style.display='block';let l=await dbAll();const q=$('#q').value.trim().toLowerCase();
+async function home(){P=null;RO=false;$('#ed').style.display='none';$('#home').style.display='block';let l=await dbAll();const q=$('#q').value.trim().toLowerCase();
 l=l.filter(p=>p.name.toLowerCase().includes(q));l.sort($('#so').value==='n'?(a,b)=>a.name.localeCompare(b.name):(a,b)=>b.updated-a.updated);
 $('#list').innerHTML=l.length?l.map(p=>`<div class="card"><div class="t"><b data-o="${p.id}">${esc(p.name)}</b> <span class="mu">(${p.type})</span><div class="mu">${p.nodes.filter(n=>ENT.includes(n.type)).length} موجودیت · ${p.nodes.filter(n=>REL.includes(n.type)).length} رابطه · ${p.nodes.length} عنصر · ${new Date(p.updated).toLocaleString(lang==='fa'?'fa-IR':'en-GB')}</div></div><button data-o="${p.id}" class="pr">باز کردن</button><button data-r="${p.id}">تغییر نام</button><button data-d="${p.id}">تکثیر</button><button data-x="${p.id}">خروجی</button><button class="dg" data-z="${p.id}">حذف</button></div>`).join(''):'<div class="mu">هنوز پروژه‌ای ندارید. با «پروژهٔ جدید» شروع کنید.</div>'}
 $('#list').onclick=async e=>{const t=e.target,g=k=>t.dataset[k];const all=await dbAll(),f=id=>all.find(p=>p.id===id);
@@ -107,7 +107,7 @@ for(const p of L){if(!Array.isArray(p.nodes)||!Array.isArray(p.edges))return ale
 dlg(`<b>وارد کردن ${L.length} پروژه</b><div class="mu">${L.map(p=>esc(p.name)+' ('+p.nodes.length+' عنصر)').join('<br>')}</div><p>پروژه‌ها با شناسهٔ جدید و به‌صورت پروژهٔ تازه اضافه می‌شوند و داده‌های فعلی بازنویسی نمی‌شوند.</p><button class="pr" id="ok">وارد کن</button> <button id="no">انصراف</button>`,async()=>{for(const p of L){const c=clone(p,true);c.name+=' (واردشده)';await dbPut(c)}P?await home():home()})};
 function dl(n,t,m='application/json'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:m}));a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),999)}
 /* ---------- editor ---------- */
-function open(p){P=p;sel=null;tool='sel';pend=null;hist=[];fut=[];$('#home').style.display='none';$('#ed').style.display='grid';$('#pn').textContent=p.name+' ('+p.type+')';stat('ذخیره شد');tools();fit();draw()}
+function open(p){P=p;$('#ed').classList.toggle('ro',RO);sel=null;tool='sel';pend=null;hist=[];fut=[];$('#home').style.display='none';$('#ed').style.display='grid';$('#pn').textContent=p.name+' ('+p.type+')';stat('ذخیره شد');tools();fit();draw()}
 $('#bBack').onclick=async()=>{await flush();home()};
 function tools(){const L=Object.keys(T).filter(k=>k!=='isa'||P.type==='EER');$('#tools').innerHTML=`<button data-t="sel" class="${tool==='sel'?'on':''}">انتخاب / جابه‌جایی</button><button data-t="link" class="${tool==='link'?'on':''}">اتصال دو عنصر</button><hr>`+L.map(k=>`<button data-t="${k}" class="${tool===k?'on':''}">+ ${T[k]}</button>`).join('')+`<hr><button id="bDel" class="dg">حذف انتخاب</button>`}
 $('#tools').onclick=e=>{const t=e.target.dataset.t;if(t){tool=t;pend=null;tools();hint()}if(e.target.id==='bDel')del()};
@@ -141,7 +141,7 @@ $('#vp').setAttribute('transform',`translate(${V.x} ${V.y}) scale(${V.k})`);$('#
 panel()}
 const cp=ev=>{const r=$('#cv').getBoundingClientRect();return{x:(ev.clientX-r.left-V.x)/V.k,y:(ev.clientY-r.top-V.y)/V.k}};
 const sn=v=>grid?Math.round(v/20)*20:v;
-$('#cv').onpointerdown=ev=>{const gn=ev.target.closest('[data-n]'),ge=ev.target.closest('[data-e]'),p=cp(ev);
+$('#cv').onpointerdown=ev=>{if(RO){const g=ev.target.closest('[data-n]');sel=g?g.dataset.n:null;drag=g?null:{t:'p',sx:ev.clientX-V.x,sy:ev.clientY-V.y};draw();$('#cv').setPointerCapture(ev.pointerId);return}const gn=ev.target.closest('[data-n]'),ge=ev.target.closest('[data-e]'),p=cp(ev);
 if(tool==='link'){if(gn){const id=gn.dataset.n;if(!pend)pend=id;else{snap();ee(P,P.nodes.find(n=>n.id===pend),P.nodes.find(n=>n.id===id));pend=null;sel=P.edges.at(-1).id;save()}draw()}return}
 if(tool!=='sel'){snap();const base=tool==='isa'?{cover:'partial',dis:'d'}:{};const n=nn(P,tool,tr(T[tool].replace(' (EER)','')),sn(p.x),sn(p.y),{...base,dt:'',nullable:true,desc:''});sel=n.id;tool='sel';tools();stat('');save();draw();return}
 if(gn&&ev.target.closest('[data-h]')){sel=gn.dataset.n;drag={t:'c',from:sel,x:p.x,y:p.y};draw()}else if(gn){sel=gn.dataset.n;const n=P.nodes.find(n=>n.id===sel);drag={t:'n',ox:p.x-n.x,oy:p.y-n.y,s:false};draw()}
@@ -158,14 +158,14 @@ else if(!REL.includes(A.type)&&!REL.includes(B.type)&&P.edges.some(e=>(e.a===A.i
 else if(!B&&!['isa','note'].includes(A.type)){snap();const m=nn(P,'attr',tr('صفت'),sn(p.x),sn(p.y),nw({par:A.id}));ee(P,A,m);sel=m.id;save();focusName()}}
 function quick(t){const n=P.nodes.find(n=>n.id===sel);if(!n||['isa','note'].includes(n.type))return;snap();const k=nb(P,n.id).filter(([,o])=>ATT.includes(o.type)).length,an=-1.2+k*.75,R=Math.max(dim(n)[0]/2,40)+85,m=nn(P,t,tr(T[t])+' '+(k+1),sn(n.x+R*Math.cos(an)),sn(n.y+R*Math.sin(an)),{dt:'',nullable:true,desc:'',par:n.id});ee(P,n,m);sel=m.id;save();draw();focusName()}
 $('#side').addEventListener('keydown',ev=>{if(ev.key==='Enter'&&ev.target.dataset.f==='name'){const n=P.nodes.find(n=>n.id===sel);if(n&&n.par&&ATT.includes(n.type)&&P.nodes.some(x=>x.id===n.par)){const t=n.type;sel=n.par;quick(t)}}});
-$('#cv').ondblclick=ev=>{const g=ev.target.closest('[data-n]');if(!g)return;const n=P.nodes.find(n=>n.id===g.dataset.n),v=prompt('نام',n.name);if(v!==null){snap();n.name=v;save();draw()}};
+$('#cv').ondblclick=ev=>{if(RO)return;const g=ev.target.closest('[data-n]');if(!g)return;const n=P.nodes.find(n=>n.id===g.dataset.n),v=prompt('نام',n.name);if(v!==null){snap();n.name=v;save();draw()}};
 $('#cv').onwheel=ev=>{ev.preventDefault();const p=cp(ev),k=Math.min(3,Math.max(.25,V.k*(ev.deltaY<0?1.1:.9)));const r=$('#cv').getBoundingClientRect();V.x=ev.clientX-r.left-p.x*k;V.y=ev.clientY-r.top-p.y*k;V.k=k;draw()};
 function fit(){if(!P.nodes.length){V={x:200,y:100,k:1};return}const r=$('#cv').getBoundingClientRect(),xs=P.nodes.map(n=>n.x),ys=P.nodes.map(n=>n.y),x0=Math.min(...xs)-120,x1=Math.max(...xs)+120,y0=Math.min(...ys)-90,y1=Math.max(...ys)+90,k=Math.min(2,r.width/(x1-x0)||1,r.height/(y1-y0)||1)||1;V={k,x:-x0*k+(r.width-(x1-x0)*k)/2,y:-y0*k+(r.height-(y1-y0)*k)/2}}
 $('#bFit').onclick=()=>{fit();draw()};$('#bGrid').onclick=function(){grid=!grid;this.classList.toggle('on',grid);draw()};
 function del(){if(!sel)return;const n=P.nodes.find(n=>n.id===sel),links=n?nb(P,n.id).length:0;
 const go=()=>{snap();if(n){P.nodes=P.nodes.filter(x=>x.id!==sel);P.edges=P.edges.filter(e=>e.a!==sel&&e.b!==sel)}else P.edges=P.edges.filter(e=>e.id!==sel);sel=null;save();draw()};
 if(n&&links)dlg(`<b>حذف «${esc(n.name)}»؟</b><p class="mu">${links} اتصال به این عنصر نیز حذف می‌شود. با «واگرد» می‌توانید برگردانید.</p><button class="dg" id="ok">حذف کن</button> <button id="no">انصراف</button>`,go);else go()}
-addEventListener('keydown',e=>{if(!P||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo()}else if((e.ctrlKey||e.metaKey)&&e.key==='y'){e.preventDefault();redo()}else if(e.key==='Tab'&&sel&&P.nodes.some(n=>n.id===sel)){e.preventDefault();quick('attr')}else if(e.key==='Delete'||e.key==='Backspace')del();else if(e.key==='Escape'){tool='sel';pend=null;tools();draw()}});
+addEventListener('keydown',e=>{if(!P||RO||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo()}else if((e.ctrlKey||e.metaKey)&&e.key==='y'){e.preventDefault();redo()}else if(e.key==='Tab'&&sel&&P.nodes.some(n=>n.id===sel)){e.preventDefault();quick('attr')}else if(e.key==='Delete'||e.key==='Backspace')del();else if(e.key==='Escape'){tool='sel';pend=null;tools();draw()}});
 /* ---------- panel ---------- */
 const row=(l,h)=>`<label>${l}</label>${h}`,opt=(v,L,c)=>L.map(([a,b])=>`<option value="${a}" ${a===c?'selected':''}>${b}</option>`).join('');
 function panel(){const s=$('#side'),n=P.nodes.find(n=>n.id===sel),e=P.edges.find(x=>x.id===sel);let h='';
@@ -181,7 +181,7 @@ else{h+=`<label><input type="checkbox" data-g="total" ${e.total?'checked':''} st
 h+=`<p><button class="dg" id="pd">حذف اتصال</button></p>`}
 else h=`<span class="mu">موس را روی عنصر ببرید تا نقطه‌های اتصال ظاهر شوند؛ از نقطه به عنصر دیگر بکشید تا وصل شود (دو موجودیت ⇐ رابطهٔ خودکار). رها کردن در فضای خالی یک صفت می‌سازد. موجودیت را انتخاب کنید و Tab بزنید تا صفت اضافه شود؛ بعد از تایپ نام، Enter صفت بعدی را می‌سازد. دوبار کلیک = تغییر نام.</span>`;
 const v=validate(P);h+=`<hr><b>اعتبارسنجی</b> <span class="mu">${v.filter(x=>x.l==='e').length} خطا، ${v.filter(x=>x.l==='w').length} هشدار</span>`+v.map(x=>`<div class="msg ${x.l}" data-sel="${x.id||''}"><b>${esc(x.t)}</b><br>${esc(x.m)}</div>`).join('');
-s.innerHTML=h}
+s.innerHTML=h;if(RO)s.querySelectorAll('input,select,textarea,button').forEach(x=>x.disabled=true)}
 $('#side').oninput=$('#side').onchange=ev=>{const t=ev.target,n=P.nodes.find(n=>n.id===sel),e=P.edges.find(x=>x.id===sel);if(t.dataset.f&&n){snap();n[t.dataset.f]=t.type==='checkbox'?t.checked:t.value;if(t.dataset.f==='type'&&n.type==='isa'){n.cover=n.cover||'partial';n.dis=n.dis||'d'}}
 else if(t.dataset.g&&e){snap();const g=t.dataset.g;if(g==='sup')e.role=t.checked?'super':'';else e[g]=t.type==='checkbox'?t.checked:t.value}else return;save();const f=document.activeElement,k=f&&f.dataset.f||f&&f.dataset.g,ss=f&&f.selectionStart;draw();if(k&&ev.type==='input'){const q=$(`#side [data-f="${k}"],#side [data-g="${k}"]`);q&&(q.focus(),q.setSelectionRange&&ss!=null&&q.setSelectionRange(ss,ss))}};
 $('#side').onclick=ev=>{const t=ev.target.closest('[data-sel]');if(t&&t.dataset.sel){sel=t.dataset.sel;const n=P.nodes.find(n=>n.id===sel);if(n){const r=$('#cv').getBoundingClientRect();V.x=r.width/2-n.x*V.k;V.y=r.height/2-n.y*V.k}draw()}if(ev.target.id==='pd')del();if(ev.target.dataset.q)quick(ev.target.dataset.q)};
@@ -230,7 +230,43 @@ new MutationObserver(()=>{if(!busy){busy=1;requestAnimationFrame(apply)}}).obser
 const _al=window.alert.bind(window),_pr=window.prompt.bind(window);window.alert=m=>_al(tr(m));window.prompt=(m,d)=>_pr(tr(m),d);
 function setLang(l){lang=l;try{localStorage.setItem('erl',l)}catch{}document.documentElement.dir=l==='fa'?'rtl':'ltr';document.documentElement.lang=l;document.querySelectorAll('.bL').forEach(b=>b.textContent=l==='fa'?'EN':'فا');P?(tools(),draw()):home();apply()}
 document.querySelectorAll('.bL').forEach(b=>b.onclick=()=>setLang(lang==='fa'?'en':'fa'));
-setLang(lang);
+let RO=false;const BASE='https://claude.ai/artifact/9ZUbARt3DLeS59nHbAc1B7';
+D.push(['اشتراک','Share'],['اشتراک‌گذاری (فقط‌خواندنی)','Share (read-only)'],['دانلود .sql','Download .sql'],['کپی','Copy'],['کپی لینک','Copy link'],['کپی شد','Copied'],['لهجه','Dialect'],['خروجی SQL','SQL export'],['ساخت نسخه‌ی من','Make my copy'],['حالت فقط‌خواندنی','Read-only view'],['لینک اشتراک معتبر نیست.','Invalid share link.'],[' خطا در مدل هست؛ ممکن است SQL ناقص باشد.',' errors in the model; the SQL may be incomplete.'],['این لینک کل پروژه را (فشرده) در خود دارد و بدون سرور کار می‌کند. گیرنده نمودار را فقط‌خواندنی می‌بیند و می‌تواند نسخهٔ خودش را بسازد. خود صفحهٔ برنامه باید برای گیرنده قابل‌دسترسی باشد؛ در غیر این صورت فایل JSON بفرستید.','This link contains the whole project (compressed) and needs no server. The recipient sees the diagram read-only and can make their own copy. The app page itself must be accessible to them; otherwise send the JSON file.'],[' نویسه. لینک بسیار بلند است؛ اگر باز نشد از فایل JSON استفاده کنید.',' characters. The link is very long; if it fails to open use the JSON file.'],[' نویسه',' characters']);
+M.clear();D.forEach(([a,b])=>M.set(a,b));F.length=0;F.push(...D.filter(([a])=>a.length>5||/[«»]/.test(a)).sort((x,y)=>y[0].length-x[0].length));
+async function zip(x,en){const c=new (en?CompressionStream:DecompressionStream)('deflate-raw'),w=c.writable.getWriter();w.write(en?new TextEncoder().encode(x):x);w.close();return new Uint8Array(await new Response(c.readable).arrayBuffer())}
+function cpy(el){el.focus();el.select();let ok=false;try{ok=document.execCommand('copy')}catch{}if(!ok&&navigator.clipboard)navigator.clipboard.writeText(el.value).catch(()=>{});stat(tr('کپی شد'))}
+async function shareDlg(){const b=await zip(JSON.stringify(P),1);let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));const link=BASE+'#s'+btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+dlg(`<b>اشتراک‌گذاری (فقط‌خواندنی)</b><p class='mu'>این لینک کل پروژه را (فشرده) در خود دارد و بدون سرور کار می‌کند. گیرنده نمودار را فقط‌خواندنی می‌بیند و می‌تواند نسخهٔ خودش را بسازد. خود صفحهٔ برنامه باید برای گیرنده قابل‌دسترسی باشد؛ در غیر این صورت فایل JSON بفرستید.</p><textarea id='sl' rows='4' readonly style='direction:ltr'>${link}</textarea><p class='mu'>${link.length} نویسه${link.length>12000?'. لینک بسیار بلند است؛ اگر باز نشد از فایل JSON استفاده کنید.':''}</p><p><button class='pr' id='scp'>کپی لینک</button> <button id='no'>بستن</button></p>`);$('#scp').onclick=()=>cpy($('#sl'))}
+async function loadShare(){try{const t=location.hash.slice(2).replace(/-/g,'+').replace(/_/g,'/'),bin=atob(t+'='.repeat((4-t.length%4)%4)),p=JSON.parse(new TextDecoder().decode(await zip(Uint8Array.from(bin,c=>c.charCodeAt(0)),0)));if(!Array.isArray(p.nodes)||!Array.isArray(p.edges))throw 0;RO=true;open(p)}catch{alert('لینک اشتراک معتبر نیست.')}}
+function genSQL(dia){const d={mysql:0,pg:1,sqlite:2}[dia],q=s=>d===0?'`'+s+'`':'"'+s+'"',N=P.nodes,
+idf=s=>((s||'').trim().replace(/[^\p{L}\p{N}_]+/gu,'_').replace(/^_+|_+$/g,''))||'x',
+ty=(dt,k)=>{const s=(dt||'').toLowerCase(),y=/int/.test(s)?'int':/real|float|decimal|numeric|number|double/.test(s)?'real':/time/.test(s)?'ts':/date/.test(s)?'date':/bool/.test(s)?'bool':s?'str':k?'int':'str';return k&&y==='str'&&d<2?'VARCHAR(100)':{int:['INT','INTEGER','INTEGER'],real:['DECIMAL(10,2)','NUMERIC','REAL'],ts:['DATETIME','TIMESTAMP','TEXT'],date:['DATE','DATE','TEXT'],bool:['BOOLEAN','BOOLEAN','INTEGER'],str:['VARCHAR(255)','VARCHAR(255)','TEXT']}[y][d]},
+own=id=>nb(P,id).map(z=>z[1]).filter(o=>ATT.includes(o.type)),
+leaves=(a,pre,seen)=>{seen.add(a.id);const ch=own(a.id).filter(o=>!seen.has(o.id));return ch.length?ch.flatMap(c=>leaves(c,pre+idf(a.name)+'_',seen)):[{n:pre+idf(a.name),a}]},
+T2=new Map,used=new Set,
+mk=(k,nm)=>{let b=idf(nm),n=b,i=2;while(used.has(n.toLowerCase()))n=b+'_'+i++;used.add(n.toLowerCase());const t={name:n,cols:[],pk:[],fks:[],uq:[],cm:[],pkc:[]};T2.set(k,t);return t},
+col=(t,n,y,nn)=>{let c=n,i=2;while(t.cols.some(x=>x.n===c))c=n+'_'+i++;t.cols.push({n:c,t:y,nn});return c},
+base=y=>y.replace(' AUTO_INCREMENT','').replace('SERIAL','INTEGER'),
+fk=(t,r,pre,nn,del)=>{const cs=r.pkc.map(c=>col(t,pre+c.n,base(c.t),nn));t.fks.push({cs,ref:r.name,rc:r.pkc.map(c=>c.n),del});return cs},
+acols=(t,at,pk)=>at.forEach(a=>{if(a.type==='derived'){t.cm.push('derived: '+a.name+(a.desc?' = '+a.desc:''));return}if(a.type==='multi')return;const k=a.type==='key'||a.type==='pkey';leaves(a,'',new Set).forEach(l=>{const c=col(t,l.n,ty(l.a.dt,k),k||!l.a.nullable);k&&pk.push(c)})}),
+build=(e,st=[])=>{if(T2.has(e.id))return T2.get(e.id);if(st.includes(e.id))return;const t=mk(e.id,e.name),pk=[],isa=nb(P,e.id).find(([x,o])=>o.type==='isa'&&x.role!=='super');
+if(isa){const sp=nb(P,isa[1].id).find(([x,o])=>x.role==='super'&&ENT.includes(o.type)),s=sp&&build(sp[1],[...st,e.id]);if(s)pk.push(...fk(t,s,'',true,true));else t.cm.push('IS-A: supertype missing')}
+else if(e.type==='weak'){nb(P,e.id).filter(([,r])=>r.type==='idrel').flatMap(([,r])=>nb(P,r.id).map(z=>z[1]).filter(o=>ENT.includes(o.type)&&o.id!==e.id)).forEach(o=>{const s=build(o,[...st,e.id]);s&&pk.push(...fk(t,s,idf(o.name)+'_',true,true))});if(!pk.length)t.cm.push('weak entity: owner missing')}
+acols(t,own(e.id),isa?[]:pk);
+if(!pk.length){pk.push(col(t,idf(e.name)+'_id',d===0?'INT AUTO_INCREMENT':d===1?'SERIAL':'INTEGER',true));t.cm.push('no key attribute: surrogate key added')}
+t.pk=pk;t.pkc=pk.map(n=>({n,t:t.cols.find(c=>c.n===n).t}));return t},
+EN=N.filter(n=>ENT.includes(n.type));
+EN.forEach(e=>build(e));
+EN.forEach(e=>{const t=T2.get(e.id);own(e.id).filter(a=>a.type==='multi').forEach(a=>{const m=mk(a.id,t.name+'_'+idf(a.name)),pk=fk(m,t,t.name+'_',true,true);leaves(a,'',new Set).forEach(l=>pk.push(col(m,l.n,ty(l.a.dt),true)));m.pk=pk;m.cm.push('multivalued attribute '+a.name)})});
+N.filter(n=>n.type==='rel').forEach(r=>{const ps=nb(P,r.id).filter(([,o])=>ENT.includes(o.type)).map(([x,o])=>({x,o,t:T2.get(o.id),c:(x.card||'').toUpperCase(),ro:x.role?idf(x.role):''}));if(ps.length<2)return;const ra=own(r.id),one=p=>p.c==='1';
+if(ps.length===2&&(one(ps[0])||one(ps[1]))){const both=one(ps[0])&&one(ps[1]),pa=both?(ps[0].x.total&&!ps[1].x.total?ps[1]:ps[0]):(one(ps[0])?ps[0]:ps[1]),c=ps.find(p=>p!==pa),cs=fk(c.t,pa.t,(pa.ro||(pa.o===c.o?'parent':idf(pa.o.name)))+'_',!!c.x.total,false);both&&c.t.uq.push(cs);acols(c.t,ra,[]);c.t.cm.push('relationship '+r.name+(both?' (1:1)':' (1:N)'))}
+else{const t=mk(r.id,r.name),pk=[];ps.forEach(p=>pk.push(...fk(t,p.t,(p.ro||idf(p.o.name))+'_',true,true)));acols(t,ra,[]);t.pk=pk;t.cm.push('relationship '+r.name+(ps.length>2?' (n-ary)':' (M:N)')+(ps.every(p=>!p.c)?': cardinality not set, treated as M:N':''))}});
+const all=[...T2.values()],bn=new Map(all.map(t=>[t.name,t])),out=[],vis=new Set,vs=t=>{if(vis.has(t))return;vis.add(t);t.fks.forEach(f=>{const x=bn.get(f.ref);x&&x!==t&&vs(x)});out.push(t)};all.forEach(vs);
+let s=`-- ER Studio · ${P.name} · ${{mysql:'MySQL',pg:'PostgreSQL',sqlite:'SQLite'}[dia]}\n`+(validate(P).some(x=>x.l==='e')?'-- WARNING: the model has validation errors; this SQL may be incomplete.\n':'')+(d===2?'PRAGMA foreign_keys = ON;\n':'')+'\n';
+out.forEach(t=>{t.cm.forEach(c=>s+='-- '+c.replace(/\s+/g,' ')+'\n');const L=t.cols.map(c=>`  ${q(c.n)} ${c.t}${c.nn?' NOT NULL':''}`);t.pk.length&&L.push(`  PRIMARY KEY (${t.pk.map(q).join(', ')})`);t.uq.forEach(u=>L.push(`  UNIQUE (${u.map(q).join(', ')})`));t.fks.forEach(f=>L.push(`  FOREIGN KEY (${f.cs.map(q).join(', ')}) REFERENCES ${q(f.ref)} (${f.rc.map(q).join(', ')})${f.del?' ON DELETE CASCADE':''}`));s+=`CREATE TABLE ${q(t.name)} (\n${L.join(',\n')}\n)${d===0?' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4':''};\n\n`});return s}
+function sqlDlg(){const v=validate(P).filter(x=>x.l==='e').length;dlg(`<b>خروجی SQL</b><label>لهجه</label><select id='sd'><option value='mysql'>MySQL</option><option value='pg'>PostgreSQL</option><option value='sqlite'>SQLite</option></select>${v?`<p class='msg e'>${v} خطا در مدل هست؛ ممکن است SQL ناقص باشد.</p>`:''}<textarea id='sq' rows='13' readonly style='direction:ltr;font:12px monospace;margin-top:8px'></textarea><p><button class='pr' id='sdl'>دانلود .sql</button> <button id='scp'>کپی</button> <button id='no'>بستن</button></p>`);const g=()=>{try{$('#sq').value=genSQL($('#sd').value)}catch(e){$('#sq').value='-- error: '+e.message}};$('#sd').onchange=g;g();$('#sdl').onclick=()=>dl(P.name+'.sql',$('#sq').value,'text/plain');$('#scp').onclick=()=>cpy($('#sq'))}
+$('#bSql').onclick=sqlDlg;$('#bShare').onclick=shareDlg;$('#bCopy').onclick=async()=>{const c=clone(P,true);c.name+=' (کپی)';RO=false;try{location.hash=''}catch{}await dbPut(c);open(c)};
+setLang(lang);if(/^#s[\w-]{20,}$/.test(location.hash))loadShare();
 </script>
 </body>
 </html>
