@@ -1,272 +1,718 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ER Studio</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#f4f6f8;--pn:#fff;--ink:#1d2433;--mu:#6a7384;--ln:#d5dae3;--ac:#0f766e;--acs:#d6efec;--er:#b4233a;--wr:#a66300;--gr:#dfe4ec;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141922;--pn:#1c2330;--ink:#e6e9f0;--mu:#97a0b2;--ln:#32394a;--ac:#3cc4b6;--acs:#1d3a3a;--er:#ff7b8f;--wr:#e7a94a;--gr:#262e3d}}
-*{box-sizing:border-box}html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--ink);font:14px/1.6 Vazirmatn,Tahoma,sans-serif}
-button,input,select,textarea{font:inherit;color:inherit}
-button{background:var(--pn);border:1px solid var(--ln);border-radius:6px;padding:4px 10px;cursor:pointer}
-button:hover{border-color:var(--ac)}button.on{background:var(--acs);border-color:var(--ac)}button.pr{background:var(--ac);color:#fff;border-color:var(--ac)}button.dg{color:var(--er)}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ac)}
-input,select,textarea{background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:4px 8px;width:100%}
-#home{max-width:880px;margin:0 auto;padding:24px 16px}
-h1{font-size:26px;font-weight:800;margin:0 0 4px}.mu{color:var(--mu)}
-.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}
-.card{background:var(--pn);border:1px solid var(--ln);border-radius:8px;padding:12px 14px;margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.card .t{flex:1;min-width:180px}.card b{font-weight:600;cursor:pointer}
-#ed{display:none;height:100%;grid-template-rows:auto 1fr;}
-#top{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:6px 10px;background:var(--pn);border-bottom:1px solid var(--ln)}
-#main{display:grid;grid-template-columns:150px 1fr 270px;min-height:0}
-#tools,#side{background:var(--pn);overflow:auto;padding:8px}#tools{border-inline-end:1px solid var(--ln)}#side{border-inline-start:1px solid var(--ln)}
-#tools button{display:block;width:100%;margin-bottom:4px;text-align:start}
-#cv{width:100%;height:100%;display:block;background:var(--bg);touch-action:none;cursor:default}
-.sh{fill:var(--pn);stroke:var(--ink);stroke-width:1.6}.tx{font:13px Vazirmatn,Tahoma,sans-serif;fill:var(--ink);text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.ln{stroke:var(--ink);stroke-width:1.6;fill:none}.ln2{stroke:var(--pn);stroke-width:2.4;fill:none}.hit{stroke:transparent;stroke-width:12;fill:none}
-.sel .sh{stroke:var(--ac);stroke-width:3}.lb{font:12px sans-serif;fill:var(--mu);text-anchor:middle}
-.hd{fill:var(--ac);stroke:var(--pn);stroke-width:2;opacity:0;cursor:crosshair}g[data-n]:hover .hd,.sel .hd{opacity:1}.bL{font-weight:600}label{display:block;margin:8px 0 2px;color:var(--mu);font-size:12px}
-.msg{border-inline-start:3px solid var(--mu);padding:4px 8px;margin:4px 0;background:var(--bg);cursor:pointer;font-size:12px}.msg.e{border-color:var(--er)}.msg.w{border-color:var(--wr)}
-#dlg{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;z-index:9}#dlg>div{background:var(--pn);padding:18px;border-radius:10px;width:min(580px,92vw);max-height:90vh;overflow:auto}#rob{display:none;margin:0}.ro #rob{display:inline-flex;gap:6px;align-items:center}.ro #tools,.ro #bUn,.ro #bRe,.ro #bImp2,.ro .hd{display:none}
-@media(max-width:760px){#main{grid-template-columns:100px 1fr}#side{position:fixed;bottom:0;inset-inline:0;max-height:42%;border-top:1px solid var(--ln)}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ER Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --pn: #fff;
+      --ink: #1d2433;
+      --mu: #6a7384;
+      --ln: #d5dae3;
+      --ac: #0f766e;
+      --acs: #d6efec;
+      --er: #b4233a;
+      --wr: #a66300;
+      --gr: #dfe4ec;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px)
+    }
+
+    @media (prefers-color-scheme:dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #141922;
+        --pn: #1c2330;
+        --ink: #e6e9f0;
+        --mu: #97a0b2;
+        --ln: #32394a;
+        --ac: #3cc4b6;
+        --acs: #1d3a3a;
+        --er: #ff7b8f;
+        --wr: #e7a94a;
+        --gr: #262e3d
+      }
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font: 14px/1.6 Vazirmatn, Tahoma, sans-serif
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      color: inherit
+    }
+
+    button {
+      background: var(--pn);
+      border: 1px solid var(--ln);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer
+    }
+
+    button:hover {
+      border-color: var(--ac)
+    }
+
+    button.on {
+      background: var(--acs);
+      border-color: var(--ac)
+    }
+
+    button.pr {
+      background: var(--ac);
+      color: #fff;
+      border-color: var(--ac)
+    }
+
+    button.dg {
+      color: var(--er)
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--ac)
+    }
+
+    input,
+    select,
+    textarea {
+      background: var(--bg);
+      border: 1px solid var(--ln);
+      border-radius: 6px;
+      padding: 4px 8px;
+      width: 100%
+    }
+
+    #home {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 24px 16px
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      margin: 0 0 4px
+    }
+
+    .mu {
+      color: var(--mu)
+    }
+
+    .bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 14px 0
+    }
+
+    .card {
+      background: var(--pn);
+      border: 1px solid var(--ln);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .card .t {
+      flex: 1;
+      min-width: 180px
+    }
+
+    .card b {
+      font-weight: 600;
+      cursor: pointer
+    }
+
+    #ed {
+      display: none;
+      height: 100%;
+      grid-template-rows: auto 1fr;
+    }
+
+    #top {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 6px 10px;
+      background: var(--pn);
+      border-bottom: 1px solid var(--ln)
+    }
+
+    #main {
+      display: grid;
+      grid-template-columns: 150px 1fr 270px;
+      min-height: 0
+    }
+
+    #tools,
+    #side {
+      background: var(--pn);
+      overflow: auto;
+      padding: 8px
+    }
+
+    #tools {
+      border-inline-end: 1px solid var(--ln)
+    }
+
+    #side {
+      border-inline-start: 1px solid var(--ln)
+    }
+
+    #tools button {
+      display: block;
+      width: 100%;
+      margin-bottom: 4px;
+      text-align: start
+    }
+
+    #cv {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: var(--bg);
+      touch-action: none;
+      cursor: default
+    }
+
+    .sh {
+      fill: var(--pn);
+      stroke: var(--ink);
+      stroke-width: 1.6
+    }
+
+    .tx {
+      font: 13px Vazirmatn, Tahoma, sans-serif;
+      fill: var(--ink);
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none
+    }
+
+    .ln {
+      stroke: var(--ink);
+      stroke-width: 1.6;
+      fill: none
+    }
+
+    .ln2 {
+      stroke: var(--pn);
+      stroke-width: 2.4;
+      fill: none
+    }
+
+    .hit {
+      stroke: transparent;
+      stroke-width: 12;
+      fill: none
+    }
+
+    .sel .sh {
+      stroke: var(--ac);
+      stroke-width: 3
+    }
+
+    .lb {
+      font: 12px sans-serif;
+      fill: var(--mu);
+      text-anchor: middle
+    }
+
+    .hd {
+      fill: var(--ac);
+      stroke: var(--pn);
+      stroke-width: 2;
+      opacity: 0;
+      cursor: crosshair
+    }
+
+    g[data-n]:hover .hd,
+    .sel .hd {
+      opacity: 1
+    }
+
+    .bL {
+      font-weight: 600
+    }
+
+    label {
+      display: block;
+      margin: 8px 0 2px;
+      color: var(--mu);
+      font-size: 12px
+    }
+
+    .msg {
+      border-inline-start: 3px solid var(--mu);
+      padding: 4px 8px;
+      margin: 4px 0;
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 12px
+    }
+
+    .msg.e {
+      border-color: var(--er)
+    }
+
+    .msg.w {
+      border-color: var(--wr)
+    }
+
+    #dlg {
+      position: fixed;
+      inset: 0;
+      background: #0007;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9
+    }
+
+    #dlg>div {
+      background: var(--pn);
+      padding: 18px;
+      border-radius: 10px;
+      width: min(580px, 92vw);
+      max-height: 90vh;
+      overflow: auto
+    }
+
+    #rob {
+      display: none;
+      margin: 0
+    }
+
+    .ro #rob {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center
+    }
+
+    .ro #tools,
+    .ro #bUn,
+    .ro #bRe,
+    .ro #bImp2,
+    .ro .hd {
+      display: none
+    }
+
+    #ed.wb #tools,
+    #ed.wb #bUn,
+    #ed.wb #bRe,
+    #ed.wb #bVal {
+      display: none
+    }
+
+    #ed.wb #main {
+      grid-template-columns: 1fr 270px
+    }
+
+    .wt {
+      fill: var(--pn);
+      stroke: #4b6a85;
+      stroke-width: 1.2
+    }
+
+    .wh {
+      fill: #98bfda;
+      stroke: #4b6a85;
+      stroke-width: 1.2
+    }
+
+    .wtx {
+      font: 12px 'Segoe UI', Tahoma, sans-serif;
+      fill: var(--ink)
+    }
+
+    .wh+.wtx {
+      fill: #102030
+    }
+
+    .wty {
+      font: 11px 'Segoe UI', Tahoma, sans-serif;
+      fill: var(--mu)
+    }
+
+    @media(max-width:760px) {
+      #ed.wb #main {
+        grid-template-columns: 1fr
+      }
+
+      #main {
+        grid-template-columns: 100px 1fr
+      }
+
+      #side {
+        position: fixed;
+        bottom: 0;
+        inset-inline: 0;
+        max-height: 42%;
+        border-top: 1px solid var(--ln)
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div id="home">
-  <h1>ER Studio</h1>
-  <div class="mu">طراحی نمودار ER و EER با نمادگذاری Chen. همهٔ پروژه‌ها فقط در همین مرورگر ذخیره می‌شوند؛ از پروژه‌های مهم خروجی بگیرید.</div>
-  <div class="bar">
-    <button class="pr" id="bNew">پروژهٔ جدید</button><button id="bSample">پروژهٔ نمونه</button>
-    <button id="bImp">وارد کردن فایل</button><button id="bAll">پشتیبان از همه</button><button class="bL">EN</button>
-    <input id="q" placeholder="جست‌وجو" style="width:160px"><select id="so" style="width:140px"><option value="u">آخرین ویرایش</option><option value="n">نام</option></select>
+  <div id="home">
+    <h1>ER Studio</h1>
+    <div class="mu">طراحی نمودار ER و EER با نمادگذاری Chen. همهٔ پروژه‌ها فقط در همین مرورگر ذخیره می‌شوند؛ از
+      پروژه‌های مهم خروجی بگیرید.</div>
+    <div class="bar">
+      <button class="pr" id="bNew">پروژهٔ جدید</button><button id="bSample">پروژهٔ نمونه</button>
+      <button id="bImp">وارد کردن فایل</button><button id="bAll">پشتیبان از همه</button><button class="bL">EN</button>
+      <input id="q" placeholder="جست‌وجو" style="width:160px"><select id="so" style="width:140px">
+        <option value="u">آخرین ویرایش</option>
+        <option value="n">نام</option>
+      </select>
+    </div>
+    <div id="list"></div>
   </div>
-  <div id="list"></div>
-</div>
-<div id="ed">
-  <div id="top">
-    <button id="bBack">پروژه‌ها</button><b id="pn"></b><span class="mu" id="st"></span><span id="rob" class="msg w">حالت فقط‌خواندنی <button id="bCopy" class="pr">ساخت نسخه‌ی من</button></span>
-    <span style="flex:1"></span>
-    <button id="bUn">واگرد</button><button id="bRe">ازنو</button><button id="bVal">اعتبارسنجی</button><button id="bFit">نمایش همه</button>
-    <button id="bGrid">شبکه</button><button class="bL">EN</button><button id="bExj">JSON</button><button id="bExs">SVG</button><button id="bSql">SQL</button><button id="bShare" class="pr">اشتراک</button><button id="bImp2">Import</button>
+  <div id="ed">
+    <div id="top">
+      <button id="bBack">پروژه‌ها</button><b id="pn"></b><span class="mu" id="st"></span><span id="rob"
+        class="msg w">حالت فقط‌خواندنی <button id="bCopy" class="pr">ساخت نسخه‌ی من</button></span>
+      <span style="flex:1"></span>
+      <button id="bUn">ریدو</button><button id="bRe">اندو</button><button id="bVal">اعتبارسنجی</button><button
+        id="bFit">نمایش همه</button>
+      <button id="bGrid">شبکه</button><button class="bL">EN</button><button id="bExj">JSON</button>
+      <button id="bExs">SVG</button><button id="bWb">MySQL Workbench</button>
+      
+      <button id="bImp2">Import</button>
+    </div>
+    <div id="main">
+      <div id="tools"></div>
+      <svg id="cv">
+        <g id="vp"></g>
+      </svg>
+      <div id="side"></div>
+    </div>
   </div>
-  <div id="main">
-    <div id="tools"></div>
-    <svg id="cv"><g id="vp"></g></svg>
-    <div id="side"></div>
+  <div id="dlg">
+    <div id="dlgc"></div>
   </div>
-</div>
-<div id="dlg"><div id="dlgc"></div></div>
-<input type="file" id="fi" accept=".json" hidden>
-<script>
-const T={entity:'موجودیت قوی',weak:'موجودیت ضعیف',rel:'رابطه',idrel:'رابطه شناسایی',attr:'صفت',key:'صفت شناسه',pkey:'کلید جزئی',multi:'چندمقداری',derived:'مشتق',isa:'IS-A (EER)',note:'یادداشت'};
-const ATT=['attr','key','pkey','multi','derived'],ENT=['entity','weak'],REL=['rel','idrel'];
-const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const uid=()=>'i'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
-let lang=(()=>{try{return localStorage.getItem('erl')||'fa'}catch{return'fa'}})();let P=null,sel=null,tool='sel',pend=null,V={x:0,y:0,k:1},grid=false,hist=[],fut=[],tmr=null,drag=null;
-/* ---------- storage ---------- */
-let db;const dbo=()=>db||(db=new Promise((res,rej)=>{const r=indexedDB.open('erstudio',1);r.onupgradeneeded=()=>r.result.createObjectStore('p',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
-async function tx(m,f){const d=await dbo();return new Promise((res,rej)=>{const t=d.transaction('p',m),s=t.objectStore('p'),r=f(s);t.oncomplete=()=>res(r.result);t.onerror=()=>rej(t.error)})}
-const dbAll=()=>tx('readonly',s=>s.getAll()),dbPut=p=>tx('readwrite',s=>s.put(p)),dbDel=id=>tx('readwrite',s=>s.delete(id));
-function stat(t){$('#st').textContent=t}
-function save(){if(RO)return;stat('در حال ذخیره…');clearTimeout(tmr);tmr=setTimeout(flush,350)}
-async function flush(){if(!P||RO)return;try{P.updated=Date.now();await dbPut(P);stat('ذخیره شد')}catch(e){stat('ذخیره ناموفق بود')}}
-addEventListener('beforeunload',()=>{if(P&&!RO)dbPut(P)});
-/* ---------- model ---------- */
-const nn=(p,t,name,x,y,o={})=>{const n={id:uid(),type:t,name,x,y,...o};p.nodes.push(n);return n};
-const ee=(p,a,b,o={})=>{const e={id:uid(),a:a.id,b:b.id,total:false,card:'',role:'',...o};p.edges.push(e);return e};
-function newP(name,type,desc){return{id:uid(),schemaVersion:1,name,type,desc:desc||'',created:Date.now(),updated:Date.now(),nodes:[],edges:[]}}
-function sample(){const p=newP('نمونه: ثبت‌نام دانشجو','ER','');const s=nn(p,'entity','Student',120,200),c=nn(p,'entity','Course',520,200),r=nn(p,'rel','Enrolls',320,200);
-ee(p,s,r,{total:true,card:'M'});ee(p,r,c,{card:'N'});
-const a=nn(p,'key','StudentID',60,80),b=nn(p,'attr','Name',200,80),d=nn(p,'key','CourseID',480,80),g=nn(p,'attr','Semester',320,320);
-ee(p,s,a);ee(p,s,b);ee(p,c,d);ee(p,r,g);return p}
-const nb=(p,id)=>p.edges.filter(e=>e.a===id||e.b===id).map(e=>[e,p.nodes.find(n=>n.id===(e.a===id?e.b:e.a))]);
-/* ---------- home ---------- */
-async function home(){P=null;RO=false;$('#ed').style.display='none';$('#home').style.display='block';let l=await dbAll();const q=$('#q').value.trim().toLowerCase();
-l=l.filter(p=>p.name.toLowerCase().includes(q));l.sort($('#so').value==='n'?(a,b)=>a.name.localeCompare(b.name):(a,b)=>b.updated-a.updated);
-$('#list').innerHTML=l.length?l.map(p=>`<div class="card"><div class="t"><b data-o="${p.id}">${esc(p.name)}</b> <span class="mu">(${p.type})</span><div class="mu">${p.nodes.filter(n=>ENT.includes(n.type)).length} موجودیت · ${p.nodes.filter(n=>REL.includes(n.type)).length} رابطه · ${p.nodes.length} عنصر · ${new Date(p.updated).toLocaleString(lang==='fa'?'fa-IR':'en-GB')}</div></div><button data-o="${p.id}" class="pr">باز کردن</button><button data-r="${p.id}">تغییر نام</button><button data-d="${p.id}">تکثیر</button><button data-x="${p.id}">خروجی</button><button class="dg" data-z="${p.id}">حذف</button></div>`).join(''):'<div class="mu">هنوز پروژه‌ای ندارید. با «پروژهٔ جدید» شروع کنید.</div>'}
-$('#list').onclick=async e=>{const t=e.target,g=k=>t.dataset[k];const all=await dbAll(),f=id=>all.find(p=>p.id===id);
-if(g('o'))open(f(g('o')));else if(g('r')){const p=f(g('r')),v=prompt('نام جدید',p.name);if(v?.trim()){p.name=v.trim();p.updated=Date.now();await dbPut(p);home()}}
-else if(g('d')){const p=clone(f(g('d')),true);p.name+=' (کپی)';await dbPut(p);home()}
-else if(g('x'))dl(f(g('x')).name+'.er.json',JSON.stringify({schemaVersion:1,project:f(g('x'))},null,1));
-else if(g('z')){const p=f(g('z'));dlg(`<b>حذف «${esc(p.name)}»؟</b><p class="mu">این پروژه برای همیشه از این مرورگر حذف می‌شود. پروژه‌های دیگر تغییر نمی‌کنند.</p><button class="dg" id="ok">حذف کن</button> <button id="no">انصراف</button>`,async()=>{await dbDel(p.id);home()})}}
-$('#q').oninput=home;$('#so').onchange=home;
-function clone(p,fresh){const c=JSON.parse(JSON.stringify(p));if(fresh){const m={};c.id=uid();c.created=c.updated=Date.now();c.nodes.forEach(n=>{const o=n.id;n.id=uid();m[o]=n.id});c.edges.forEach(e=>{e.id=uid();e.a=m[e.a];e.b=m[e.b]})}return c}
-function dlg(h,ok){$('#dlgc').innerHTML=h;$('#dlg').style.display='flex';const c=()=>$('#dlg').style.display='none';$('#no')&&($('#no').onclick=c);$('#ok')&&($('#ok').onclick=()=>{c();ok&&ok()})}
-$('#bNew').onclick=()=>dlg(`<b>پروژهٔ جدید</b><label>نام</label><input id="fn" value="پروژهٔ جدید"><label>توضیحات (اختیاری)</label><input id="fd"><label>نوع</label><select id="ft"><option>ER</option><option>EER</option></select><p class="mu">ER برای نمودار پایه است؛ EER ابزار IS-A را هم فعال می‌کند.</p><button class="pr" id="ok">ایجاد</button> <button id="no">انصراف</button>`,()=>{const p=newP($('#fn').value.trim()||'بدون نام',$('#ft').value,$('#fd').value);dbPut(p).then(()=>open(p))});
-$('#bSample').onclick=async()=>{const p=sample();await dbPut(p);open(p)};
-$('#bAll').onclick=async()=>dl('er-backup.json',JSON.stringify({schemaVersion:1,projects:await dbAll()}));
-$('#bImp').onclick=$('#bImp2').onclick=()=>$('#fi').click();
-$('#fi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;let d;try{d=JSON.parse(await f.text())}catch{return alert('فایل JSON معتبر نیست.')}
-if(typeof d.schemaVersion!=='number')return alert('فایل نسخهٔ Schema ندارد.');if(d.schemaVersion>1)return alert('این فایل با نسخهٔ جدیدتری ساخته شده و قابل وارد کردن نیست.');
-const L=d.projects||(d.project?[d.project]:null);if(!L)return alert('پروژه‌ای در فایل پیدا نشد.');
-for(const p of L){if(!Array.isArray(p.nodes)||!Array.isArray(p.edges))return alert('ساختار پروژه خراب است.');const ids=new Set(p.nodes.map(n=>n.id));if(p.edges.some(x=>!ids.has(x.a)||!ids.has(x.b)))return alert('فایل ارجاع شکسته دارد (اتصال به عنصر ناموجود).')}
-dlg(`<b>وارد کردن ${L.length} پروژه</b><div class="mu">${L.map(p=>esc(p.name)+' ('+p.nodes.length+' عنصر)').join('<br>')}</div><p>پروژه‌ها با شناسهٔ جدید و به‌صورت پروژهٔ تازه اضافه می‌شوند و داده‌های فعلی بازنویسی نمی‌شوند.</p><button class="pr" id="ok">وارد کن</button> <button id="no">انصراف</button>`,async()=>{for(const p of L){const c=clone(p,true);c.name+=' (واردشده)';await dbPut(c)}P?await home():home()})};
-function dl(n,t,m='application/json'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:m}));a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),999)}
-/* ---------- editor ---------- */
-function open(p){P=p;$('#ed').classList.toggle('ro',RO);sel=null;tool='sel';pend=null;hist=[];fut=[];$('#home').style.display='none';$('#ed').style.display='grid';$('#pn').textContent=p.name+' ('+p.type+')';stat('ذخیره شد');tools();fit();draw()}
-$('#bBack').onclick=async()=>{await flush();home()};
-function tools(){const L=Object.keys(T).filter(k=>k!=='isa'||P.type==='EER');$('#tools').innerHTML=`<button data-t="sel" class="${tool==='sel'?'on':''}">انتخاب / جابه‌جایی</button><button data-t="link" class="${tool==='link'?'on':''}">اتصال دو عنصر</button><hr>`+L.map(k=>`<button data-t="${k}" class="${tool===k?'on':''}">+ ${T[k]}</button>`).join('')+`<hr><button id="bDel" class="dg">حذف انتخاب</button>`}
-$('#tools').onclick=e=>{const t=e.target.dataset.t;if(t){tool=t;pend=null;tools();hint()}if(e.target.id==='bDel')del()};
-function hint(){stat(tool==='link'?'عنصر اول را انتخاب کنید، سپس عنصر دوم':tool!=='sel'?'روی بوم کلیک کنید تا «'+T[tool]+'» اضافه شود':'')}
-function snap(){hist.push(JSON.stringify({n:P.nodes,e:P.edges}));if(hist.length>100)hist.shift();fut=[]}
-function restore(s){const o=JSON.parse(s);P.nodes=o.n;P.edges=o.e;sel=null;draw();save()}
-$('#bUn').onclick=undo;$('#bRe').onclick=redo;
-function undo(){if(!hist.length)return;fut.push(JSON.stringify({n:P.nodes,e:P.edges}));restore(hist.pop())}
-function redo(){if(!fut.length)return;hist.push(JSON.stringify({n:P.nodes,e:P.edges}));restore(fut.pop())}
-const dim=n=>{const l=(n.name||'').length;if(ATT.includes(n.type))return[Math.max(76,l*8+34),40];if(REL.includes(n.type))return[Math.max(96,l*9+56),64];if(n.type==='isa')return[36,36];return[Math.max(96,l*9+34),46]};
-function clip(n,dx,dy){const[w,h]=dim(n),a=w/2,b=h/2;if(!dx&&!dy)return 0;let t;if(ENT.includes(n.type)||n.type==='note')t=Math.min(a/Math.abs(dx||1e-9),b/Math.abs(dy||1e-9));else if(REL.includes(n.type))t=1/(Math.abs(dx)/a+Math.abs(dy)/b);else t=1/Math.sqrt((dx/a)**2+(dy/b)**2);return t}
-function shape(n){const[w,h]=dim(n),a=w/2,b=h/2,t=n.type;let s='';
-if(ENT.includes(t))s=`<rect class="sh" x="${-a}" y="${-b}" width="${w}" height="${h}"/>`+(t==='weak'?`<rect class="sh" style="fill:none" x="${-a+5}" y="${-b+5}" width="${w-10}" height="${h-10}"/>`:'');
-else if(REL.includes(t))s=`<polygon class="sh" points="0,${-b} ${a},0 0,${b} ${-a},0"/>`+(t==='idrel'?`<polygon class="sh" style="fill:none" points="0,${-b+7} ${a-11},0 0,${b-7} ${-a+11},0"/>`:'');
-else if(t==='isa')return`<circle class="sh" r="18"/><text class="tx" style="font-size:12px">${n.dis==='o'?'o':'d'}</text>`;
-else if(t==='note')return`<rect class="sh" style="stroke-dasharray:4 3;fill:none" x="${-a}" y="${-b}" width="${w}" height="${h}"/><text class="tx">${esc(n.name)}</text>`;
-else s=`<ellipse class="sh" ${t==='derived'?'style="stroke-dasharray:5 3"':''} rx="${a}" ry="${b}"/>`+(t==='multi'?`<ellipse class="sh" style="fill:none" rx="${a-5}" ry="${b-5}"/>`:'');
-const ul=t==='key'?'underline':t==='pkey'?'underline dashed':'none';return s+`<text class="tx" style="text-decoration:${ul}">${esc(n.name)}</text>`}
-function draw(){const m=new Map(P.nodes.map(n=>[n.id,n])),cnt={};let h='';
-P.edges.forEach(e=>{const A=m.get(e.a),B=m.get(e.b);if(!A||!B)return;const k=[e.a,e.b].sort().join(),i=cnt[k]=(cnt[k]||0)+1,tot=P.edges.filter(x=>[x.a,x.b].sort().join()===k).length,off=(i-(tot+1)/2)*14;
-let dx=B.x-A.x,dy=B.y-A.y;const L=Math.hypot(dx,dy)||1,px=-dy/L*off,py=dx/L*off;
-const ta=clip(A,dx,dy),tb=clip(B,-dx,-dy),x1=A.x+dx*ta+px,y1=A.y+dy*ta+py,x2=B.x-dx*tb+px,y2=B.y-dy*tb+py,d=`M${x1} ${y1}L${x2} ${y2}`;
-const isaTot=(A.type==='isa'||B.type==='isa')&&e.role==='super'&&(A.cover||B.cover)==='total';
-const dbl=e.total||isaTot,c=e.id===sel?' style="stroke:var(--ac)"':'';
-h+=`<g data-e="${e.id}"><path class="hit" d="${d}"/><path class="ln"${c} d="${d}" ${dbl?'stroke-width="5"':''}/>${dbl?`<path class="ln2" d="${d}"/>`:''}`;
-const ent=ENT.includes(B.type)||B.type==='attr'?B:A,oth=ent===B?A:B,lt=ent===B?.78:.22,lx=x1+(x2-x1)*lt+(py?py*.5:0),ly=y1+(y2-y1)*lt-8;
-const lab=[e.card,e.role].filter(Boolean).join(' · ');if(lab)h+=`<text class="lb" x="${lx}" y="${ly}">${esc(lab)}</text>`;h+='</g>'});
-P.nodes.forEach(n=>{const[w,hh]=dim(n),a=w/2,b=hh/2;h+=`<g data-n="${n.id}" class="${n.id===sel||n.id===pend?'sel':''}" transform="translate(${n.x} ${n.y})" style="cursor:move">${shape(n)}${[[a,0],[-a,0],[0,-b],[0,b]].map(([x,y])=>`<circle class="hd" data-h="1" cx="${x}" cy="${y}" r="6"/>`).join('')}</g>`});if(drag&&drag.t==='c'){const A=m.get(drag.from);h+=`<path class="ln" style="stroke:var(--ac);stroke-dasharray:5 4;pointer-events:none" d="M${A.x} ${A.y}L${drag.x} ${drag.y}"/>`}
-let g='';if(grid){const s=40*V.k;g=''}
-$('#vp').setAttribute('transform',`translate(${V.x} ${V.y}) scale(${V.k})`);$('#vp').innerHTML=h;$('#cv').style.backgroundImage=grid?`radial-gradient(var(--gr) 1.2px,transparent 1.2px)`:'none';$('#cv').style.backgroundSize=`${20*V.k}px ${20*V.k}px`;$('#cv').style.backgroundPosition=`${V.x}px ${V.y}px`;
-panel()}
-const cp=ev=>{const r=$('#cv').getBoundingClientRect();return{x:(ev.clientX-r.left-V.x)/V.k,y:(ev.clientY-r.top-V.y)/V.k}};
-const sn=v=>grid?Math.round(v/20)*20:v;
-$('#cv').onpointerdown=ev=>{if(RO){const g=ev.target.closest('[data-n]');sel=g?g.dataset.n:null;drag=g?null:{t:'p',sx:ev.clientX-V.x,sy:ev.clientY-V.y};draw();$('#cv').setPointerCapture(ev.pointerId);return}const gn=ev.target.closest('[data-n]'),ge=ev.target.closest('[data-e]'),p=cp(ev);
-if(tool==='link'){if(gn){const id=gn.dataset.n;if(!pend)pend=id;else{snap();ee(P,P.nodes.find(n=>n.id===pend),P.nodes.find(n=>n.id===id));pend=null;sel=P.edges.at(-1).id;save()}draw()}return}
-if(tool!=='sel'){snap();const base=tool==='isa'?{cover:'partial',dis:'d'}:{};const n=nn(P,tool,tr(T[tool].replace(' (EER)','')),sn(p.x),sn(p.y),{...base,dt:'',nullable:true,desc:''});sel=n.id;tool='sel';tools();stat('');save();draw();return}
-if(gn&&ev.target.closest('[data-h]')){sel=gn.dataset.n;drag={t:'c',from:sel,x:p.x,y:p.y};draw()}else if(gn){sel=gn.dataset.n;const n=P.nodes.find(n=>n.id===sel);drag={t:'n',ox:p.x-n.x,oy:p.y-n.y,s:false};draw()}
-else if(ge){sel=ge.dataset.e;draw()}else{sel=null;drag={t:'p',sx:ev.clientX-V.x,sy:ev.clientY-V.y};draw()}
-$('#cv').setPointerCapture(ev.pointerId)};
-$('#cv').onpointermove=ev=>{if(!drag)return;if(drag.t==='c'){const q=cp(ev);drag.x=q.x;drag.y=q.y;draw();return}if(drag.t==='p'){V.x=ev.clientX-drag.sx;V.y=ev.clientY-drag.sy;draw();return}
-const p=cp(ev),n=P.nodes.find(n=>n.id===sel);if(!drag.s){snap();drag.s=true}n.x=sn(p.x-drag.ox);n.y=sn(p.y-drag.oy);draw()};
-$('#cv').onpointerup=ev=>{const d=drag;drag=null;if(d&&d.t==='c')finish(d,ev);else if(d&&d.s)save();draw()};
-function focusName(){setTimeout(()=>{const i=$('#side [data-f=name]');i&&(i.focus(),i.select())},30)}
-function finish(d,ev){const A=P.nodes.find(n=>n.id===d.from),el=document.elementFromPoint(ev.clientX,ev.clientY),g=el&&el.closest('[data-n]'),B=g&&P.nodes.find(n=>n.id===g.dataset.n),p=cp(ev),nw=o=>({dt:'',nullable:true,desc:'',...o});
-if(Math.hypot(p.x-A.x,p.y-A.y)<30)return;
-if(B&&B!==A){if(ENT.includes(A.type)&&ENT.includes(B.type)){snap();const r=nn(P,'rel',tr('رابطه'),sn((A.x+B.x)/2),sn((A.y+B.y)/2),nw());ee(P,A,r);ee(P,r,B);sel=r.id;save();focusName()}
-else if(!REL.includes(A.type)&&!REL.includes(B.type)&&P.edges.some(e=>(e.a===A.id&&e.b===B.id)||(e.a===B.id&&e.b===A.id)))return;else{snap();sel=ee(P,A,B).id;save()}}
-else if(!B&&!['isa','note'].includes(A.type)){snap();const m=nn(P,'attr',tr('صفت'),sn(p.x),sn(p.y),nw({par:A.id}));ee(P,A,m);sel=m.id;save();focusName()}}
-function quick(t){const n=P.nodes.find(n=>n.id===sel);if(!n||['isa','note'].includes(n.type))return;snap();const k=nb(P,n.id).filter(([,o])=>ATT.includes(o.type)).length,an=-1.2+k*.75,R=Math.max(dim(n)[0]/2,40)+85,m=nn(P,t,tr(T[t])+' '+(k+1),sn(n.x+R*Math.cos(an)),sn(n.y+R*Math.sin(an)),{dt:'',nullable:true,desc:'',par:n.id});ee(P,n,m);sel=m.id;save();draw();focusName()}
-$('#side').addEventListener('keydown',ev=>{if(ev.key==='Enter'&&ev.target.dataset.f==='name'){const n=P.nodes.find(n=>n.id===sel);if(n&&n.par&&ATT.includes(n.type)&&P.nodes.some(x=>x.id===n.par)){const t=n.type;sel=n.par;quick(t)}}});
-$('#cv').ondblclick=ev=>{if(RO)return;const g=ev.target.closest('[data-n]');if(!g)return;const n=P.nodes.find(n=>n.id===g.dataset.n),v=prompt('نام',n.name);if(v!==null){snap();n.name=v;save();draw()}};
-$('#cv').onwheel=ev=>{ev.preventDefault();const p=cp(ev),k=Math.min(3,Math.max(.25,V.k*(ev.deltaY<0?1.1:.9)));const r=$('#cv').getBoundingClientRect();V.x=ev.clientX-r.left-p.x*k;V.y=ev.clientY-r.top-p.y*k;V.k=k;draw()};
-function fit(){if(!P.nodes.length){V={x:200,y:100,k:1};return}const r=$('#cv').getBoundingClientRect(),xs=P.nodes.map(n=>n.x),ys=P.nodes.map(n=>n.y),x0=Math.min(...xs)-120,x1=Math.max(...xs)+120,y0=Math.min(...ys)-90,y1=Math.max(...ys)+90,k=Math.min(2,r.width/(x1-x0)||1,r.height/(y1-y0)||1)||1;V={k,x:-x0*k+(r.width-(x1-x0)*k)/2,y:-y0*k+(r.height-(y1-y0)*k)/2}}
-$('#bFit').onclick=()=>{fit();draw()};$('#bGrid').onclick=function(){grid=!grid;this.classList.toggle('on',grid);draw()};
-function del(){if(!sel)return;const n=P.nodes.find(n=>n.id===sel),links=n?nb(P,n.id).length:0;
-const go=()=>{snap();if(n){P.nodes=P.nodes.filter(x=>x.id!==sel);P.edges=P.edges.filter(e=>e.a!==sel&&e.b!==sel)}else P.edges=P.edges.filter(e=>e.id!==sel);sel=null;save();draw()};
-if(n&&links)dlg(`<b>حذف «${esc(n.name)}»؟</b><p class="mu">${links} اتصال به این عنصر نیز حذف می‌شود. با «واگرد» می‌توانید برگردانید.</p><button class="dg" id="ok">حذف کن</button> <button id="no">انصراف</button>`,go);else go()}
-addEventListener('keydown',e=>{if(!P||RO||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo()}else if((e.ctrlKey||e.metaKey)&&e.key==='y'){e.preventDefault();redo()}else if(e.key==='Tab'&&sel&&P.nodes.some(n=>n.id===sel)){e.preventDefault();quick('attr')}else if(e.key==='Delete'||e.key==='Backspace')del();else if(e.key==='Escape'){tool='sel';pend=null;tools();draw()}});
-/* ---------- panel ---------- */
-const row=(l,h)=>`<label>${l}</label>${h}`,opt=(v,L,c)=>L.map(([a,b])=>`<option value="${a}" ${a===c?'selected':''}>${b}</option>`).join('');
-function panel(){const s=$('#side'),n=P.nodes.find(n=>n.id===sel),e=P.edges.find(x=>x.id===sel);let h='';
-if(n){const fam=ATT.includes(n.type)?ATT:ENT.includes(n.type)?ENT:REL.includes(n.type)?REL:[n.type];
-h=`<b>${T[n.type]}</b>`+row('نام',`<input data-f="name" value="${esc(n.name)}">`)+row('نوع',`<select data-f="type">${opt(0,fam.map(k=>[k,T[k]]),n.type)}</select>`);
-if(ATT.includes(n.type))h+=row('نوع داده / دامنه',`<input data-f="dt" value="${esc(n.dt)}" placeholder="مثلاً Real [0..20]">`)+`<label><input type="checkbox" data-f="nullable" ${n.nullable?'checked':''} style="width:auto"> می‌تواند Null باشد</label>`+(n.type==='derived'?row('منطق مشتق‌شدن',`<input data-f="desc" value="${esc(n.desc)}">`):'');
-if(n.type==='isa')h+=row('پوشش',`<select data-f="cover">${opt(0,[['total','کامل (Total)'],['partial','ناقص (Partial)']],n.cover)}</select>`)+row('هم‌پوشانی',`<select data-f="dis">${opt(0,[['d','مجزا (Disjoint)'],['o','همپوشا (Overlapping)']],n.dis)}</select>`)+`<p class="mu">یال متصل به زبرنوع باید «زبرنوع» علامت بخورد؛ بقیه یال‌ها زیرنوع‌اند.</p>`;
-if(!['isa','note'].includes(n.type)){const Q=ENT.includes(n.type)?['attr','key',...(n.type==='weak'?['pkey']:[]),'multi','derived']:['attr','multi','derived'];h+=`<label>افزودن سریع صفت (Tab)</label>`+Q.map(k=>`<button data-q="${k}">+ ${T[k]}</button>`).join(' ')}const nbs=nb(P,n.id);h+=`<label>اتصال‌ها</label>`+(nbs.map(([x,o])=>`<div class="msg" data-sel="${x.id}">${esc(o.name)} (${T[o.type]})</div>`).join('')||'<span class="mu">بدون اتصال</span>')+`<p><button class="dg" id="pd">حذف</button></p>`}
-else if(e){const A=P.nodes.find(n=>n.id===e.a),B=P.nodes.find(n=>n.id===e.b),isaE=A.type==='isa'||B.type==='isa';
-h=`<b>اتصال: ${esc(A.name)} ↔ ${esc(B.name)}</b>`;
-if(isaE)h+=`<label><input type="checkbox" data-g="sup" ${e.role==='super'?'checked':''} style="width:auto"> این یال به زبرنوع (Supertype) می‌رسد</label>`;
-else{h+=`<label><input type="checkbox" data-g="total" ${e.total?'checked':''} style="width:auto"> مشارکت الزامی (خط دوتایی)</label>`+row('چندی (Cardinality)',`<select data-g="card">${opt(0,[['','—'],['1','1'],['N','N'],['M','M']],e.card)}</select>`)+row('نقش',`<input data-g="role" value="${esc(e.role)}" placeholder="مثلاً Prerequisite">`)}
-h+=`<p><button class="dg" id="pd">حذف اتصال</button></p>`}
-else h=`<span class="mu">موس را روی عنصر ببرید تا نقطه‌های اتصال ظاهر شوند؛ از نقطه به عنصر دیگر بکشید تا وصل شود (دو موجودیت ⇐ رابطهٔ خودکار). رها کردن در فضای خالی یک صفت می‌سازد. موجودیت را انتخاب کنید و Tab بزنید تا صفت اضافه شود؛ بعد از تایپ نام، Enter صفت بعدی را می‌سازد. دوبار کلیک = تغییر نام.</span>`;
-const v=validate(P);h+=`<hr><b>اعتبارسنجی</b> <span class="mu">${v.filter(x=>x.l==='e').length} خطا، ${v.filter(x=>x.l==='w').length} هشدار</span>`+v.map(x=>`<div class="msg ${x.l}" data-sel="${x.id||''}"><b>${esc(x.t)}</b><br>${esc(x.m)}</div>`).join('');
-s.innerHTML=h;if(RO)s.querySelectorAll('input,select,textarea,button').forEach(x=>x.disabled=true)}
-$('#side').oninput=$('#side').onchange=ev=>{const t=ev.target,n=P.nodes.find(n=>n.id===sel),e=P.edges.find(x=>x.id===sel);if(t.dataset.f&&n){snap();n[t.dataset.f]=t.type==='checkbox'?t.checked:t.value;if(t.dataset.f==='type'&&n.type==='isa'){n.cover=n.cover||'partial';n.dis=n.dis||'d'}}
-else if(t.dataset.g&&e){snap();const g=t.dataset.g;if(g==='sup')e.role=t.checked?'super':'';else e[g]=t.type==='checkbox'?t.checked:t.value}else return;save();const f=document.activeElement,k=f&&f.dataset.f||f&&f.dataset.g,ss=f&&f.selectionStart;draw();if(k&&ev.type==='input'){const q=$(`#side [data-f="${k}"],#side [data-g="${k}"]`);q&&(q.focus(),q.setSelectionRange&&ss!=null&&q.setSelectionRange(ss,ss))}};
-$('#side').onclick=ev=>{const t=ev.target.closest('[data-sel]');if(t&&t.dataset.sel){sel=t.dataset.sel;const n=P.nodes.find(n=>n.id===sel);if(n){const r=$('#cv').getBoundingClientRect();V.x=r.width/2-n.x*V.k;V.y=r.height/2-n.y*V.k}draw()}if(ev.target.id==='pd')del();if(ev.target.dataset.q)quick(ev.target.dataset.q)};
-$('#bVal').onclick=()=>{const v=validate(P);dlg(`<b>گزارش اعتبارسنجی</b>`+(v.length?v.map(x=>`<div class="msg ${x.l}"><b>${esc(x.t)}</b><br>${esc(x.m)}</div>`).join(''):'<p>مشکلی پیدا نشد.</p>')+`<p><button id="no">بستن</button></p>`)};
-/* ---------- validation ---------- */
-function validate(p){const r=[],add=(l,t,m,id)=>r.push({l,t,m,id});
-p.nodes.forEach(n=>{const nm=n.name?.trim(),nbs=nb(p,n.id);
-if(!nm)add('e','عنصر بدون نام',T[n.type]+' نام ندارد؛ نام برای شناسایی در مدل لازم است.',n.id);
-if(ENT.includes(n.type)){const at=nbs.filter(([,o])=>ATT.includes(o.type));
-if(!at.length)add('w','موجودیت بدون صفت','«'+nm+'» صفتی ندارد. ابزار «اتصال» را بین موجودیت و یک صفت بزنید.',n.id);
-if(n.type==='entity'&&!at.some(([,o])=>o.type==='key')&&!nbs.some(([,o])=>o.type==='isa'))add('e','موجودیت قوی بدون شناسه','«'+nm+'» هر نمونه را نمی‌تواند یکتا شناسایی کند. یک صفت شناسه اضافه کنید.',n.id);
-if(n.type==='weak'){const id=nbs.filter(([,o])=>o.type==='idrel');if(!id.length)add('e','موجودیت ضعیف بدون رابطه شناسایی','«'+nm+'» باید از طریق لوزی دوتایی به موجودیت مالک وصل شود.',n.id);else if(!id.some(([e])=>e.total))add('w','مشارکت موجودیت ضعیف الزامی نیست','موجودیت ضعیف باید در رابطه شناسایی مشارکت الزامی داشته باشد.',n.id);
-if(!at.some(([,o])=>o.type==='pkey'))add('e','موجودیت ضعیف بدون کلید جزئی','یک صفت «کلید جزئی» اضافه کنید.',n.id)}}
-if(REL.includes(n.type)){const en=nbs.filter(([,o])=>ENT.includes(o.type)||o.type==='isa'||REL.includes(o.type));
-if(!en.length)add('e','رابطه بدون شرکت‌کننده','«'+nm+'» به هیچ موجودیتی وصل نیست.',n.id);
-else if(en.length<2)add('e','رابطه با شرکت‌کنندهٔ ناکافی','یک رابطه دست‌کم دو اتصال لازم دارد (رابطهٔ بازگشتی = دو اتصال به یک موجودیت).',n.id);
-const roles=en.map(([e])=>e.role).filter(Boolean);if(new Set(roles).size<roles.length)add('w','نقش تکراری','دو شرکت‌کنندهٔ «'+nm+'» نقش یکسان دارند.',n.id);
-const ids=en.map(([,o])=>o.id);if(new Set(ids).size<ids.length&&en.some(([e])=>!e.role))add('w','رابطهٔ بازگشتی با نقش نامشخص','برای هر یال به موجودیت تکراری نقش بگذارید.',n.id);
-if(n.type==='idrel'&&!en.some(([,o])=>o.type==='weak'))add('e','رابطه شناسایی بدون موجودیت ضعیف','لوزی دوتایی باید به یک موجودیت ضعیف وصل شود.',n.id);
-if(en.length>=2&&en.every(([e])=>!e.card))add('i','چندی تعیین نشده','برای «'+nm+'» چندی (1/N/M) هر طرف را مشخص کنید.',n.id)}
-if(ATT.includes(n.type)&&!nbs.length)add('w','صفت رها','«'+nm+'» به هیچ موجودیت یا رابطه‌ای وصل نیست.',n.id);
-if(n.type==='derived'&&!n.desc)add('i','صفت مشتق بدون توضیح','منطق مشتق‌شدن «'+nm+'» را ثبت کنید.',n.id);
-if(n.type==='isa'){const sup=nbs.filter(([e])=>e.role==='super'),sub=nbs.filter(([e])=>e.role!=='super');if(!sup.length)add('e','IS-A بدون زبرنوع','یک یال را «زبرنوع» علامت بزنید.',n.id);if(!sub.length)add('e','IS-A بدون زیرنوع','دست‌کم یک زیرنوع وصل کنید.',n.id)}
-if(Math.abs(n.x)>5000||Math.abs(n.y)>5000)add('w','عنصر خارج از محدوده','با «نمایش همه» آن را پیدا کنید.',n.id)});
-const nm=p.nodes.filter(n=>ENT.includes(n.type)).map(n=>n.name?.trim().toLowerCase());nm.forEach((x,i)=>{if(x&&nm.indexOf(x)!==i)add('w','نام موجودیت تکراری','«'+x+'» بیش از یک بار تعریف شده.')});
-const g={};p.edges.filter(e=>e.role==='super').forEach(e=>{const i=p.nodes.find(n=>n.id===e.a).type==='isa'?e.a:e.b,s=i===e.a?e.b:e.a;g[i]=s});
-return r}
-/* ---------- export ---------- */
-$('#bExj').onclick=()=>dl(P.name+'.er.json',JSON.stringify({schemaVersion:1,project:P},null,1));
-$('#bExs').onclick=()=>{if(!P.nodes.length)return alert('نمودار خالی است.');const xs=P.nodes.map(n=>n.x),ys=P.nodes.map(n=>n.y),x0=Math.min(...xs)-110,y0=Math.min(...ys)-80,w=Math.max(...xs)+110-x0,h=Math.max(...ys)+80-y0;
-const css='.sh{fill:#fff;stroke:#1d2433;stroke-width:1.6}.tx{font:13px sans-serif;fill:#1d2433;text-anchor:middle;dominant-baseline:central}.ln{stroke:#1d2433;stroke-width:1.6;fill:none}.ln2{stroke:#fff;stroke-width:2.4;fill:none}.hit{display:none}.lb{font:12px sans-serif;fill:#555;text-anchor:middle}';
-const body=$('#vp').innerHTML.replace(/<circle class="hd"[^>]*\/>/g,'').replace(/ class="sel"/g,'').replace(/var\(--ac\)/g,'#1d2433').replace(/var\(--pn\)/g,'#fff').replace(/ style="cursor:move"/g,'');
-dl(P.name+'.svg',`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x0} ${y0} ${w} ${h}" width="${w}" height="${h}"><style>${css}</style><rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="#fff"/>${body}</svg>`,'image/svg+xml')};
-const D=[['نام','Name'],['رابطه','Relationship'],['صفت','Attribute'],['مشتق','Derived'],['نوع','Type'],['حذف','Delete'],['بستن','Close'],['نقش','Role'],['پوشش','Coverage'],['انصراف','Cancel'],['ایجاد','Create'],['باز کردن','Open'],['تکثیر','Duplicate'],['خروجی','Export'],['واگرد','Undo'],['ازنو','Redo'],['شبکه','Grid'],['پروژه‌ها','Projects'],['حذف کن','Delete'],['وارد کن','Import'],['یادداشت','Note'],['تغییر نام','Rename'],['حذف اتصال','Delete connection'],['حذف انتخاب','Delete selection'],['اتصال‌ها','Connections'],['بدون اتصال','No connections'],['اعتبارسنجی','Validate'],['نمایش همه','Fit all'],['نام جدید','New name'],['جست‌وجو','Search'],['آخرین ویرایش','Last edited'],['انتخاب / جابه‌جایی','Select / move'],['اتصال دو عنصر','Connect two elements'],['موجودیت قوی','Strong entity'],['موجودیت ضعیف','Weak entity'],['رابطه شناسایی','Identifying relationship'],['صفت شناسه','Key attribute'],['کلید جزئی','Partial key'],['چندمقداری','Multivalued'],['پروژهٔ جدید','New project'],['پروژهٔ نمونه','Sample project'],['وارد کردن فایل','Import file'],['پشتیبان از همه','Back up all'],['نمونه: ثبت‌نام دانشجو','Sample: Student enrollment'],
-['طراحی نمودار ER و EER با نمادگذاری Chen. همهٔ پروژه‌ها فقط در همین مرورگر ذخیره می‌شوند؛ از پروژه‌های مهم خروجی بگیرید.','Design ER and EER diagrams in Chen notation. Projects are stored only in this browser; export the important ones.'],['هنوز پروژه‌ای ندارید. با «پروژهٔ جدید» شروع کنید.','No projects yet. Start with "New project".'],[' موجودیت · ',' entities · '],[' رابطه · ',' relationships · '],[' عنصر · ',' elements · '],['توضیحات (اختیاری)','Description (optional)'],['ER برای نمودار پایه است؛ EER ابزار IS-A را هم فعال می‌کند.','ER is for basic diagrams; EER also enables IS-A.'],['حذف «','Delete «'],['»؟','»?'],['این پروژه برای همیشه از این مرورگر حذف می‌شود. پروژه‌های دیگر تغییر نمی‌کنند.','This project is deleted permanently from this browser. Other projects are not affected.'],[' اتصال به این عنصر نیز حذف می‌شود. با «واگرد» می‌توانید برگردانید.',' connection(s) to this element are deleted too. Undo restores them.'],['وارد کردن ','Import '],['پروژه‌ها با شناسهٔ جدید و به‌صورت پروژهٔ تازه اضافه می‌شوند و داده‌های فعلی بازنویسی نمی‌شوند.','Projects are added as new projects; existing data is never overwritten.'],
-['فایل JSON معتبر نیست.','Invalid JSON file.'],['فایل نسخهٔ Schema ندارد.','File has no schema version.'],['این فایل با نسخهٔ جدیدتری ساخته شده و قابل وارد کردن نیست.','File was made by a newer version and cannot be imported.'],['پروژه‌ای در فایل پیدا نشد.','No project found in file.'],['ساختار پروژه خراب است.','Project structure is corrupt.'],['فایل ارجاع شکسته دارد (اتصال به عنصر ناموجود).','File has broken references.'],['نمودار خالی است.','Diagram is empty.'],
-['در حال ذخیره…','Saving…'],['ذخیره شد','Saved'],['ذخیره ناموفق بود','Save failed'],['عنصر اول را انتخاب کنید، سپس عنصر دوم','Pick the first element, then the second'],['روی بوم کلیک کنید تا «','Click the canvas to add «'],['» اضافه شود','»'],
-['افزودن سریع صفت (Tab)','Quick-add attribute (Tab)'],['موس را روی عنصر ببرید تا نقطه‌های اتصال ظاهر شوند؛ از نقطه به عنصر دیگر بکشید تا وصل شود (دو موجودیت ⇐ رابطهٔ خودکار). رها کردن در فضای خالی یک صفت می‌سازد. موجودیت را انتخاب کنید و Tab بزنید تا صفت اضافه شود؛ بعد از تایپ نام، Enter صفت بعدی را می‌سازد. دوبار کلیک = تغییر نام.','Hover an element to see its connection dots; drag from a dot to another element to connect (two entities ⇒ automatic relationship). Release on empty space to create an attribute. Select an entity and press Tab to add an attribute; Enter after typing a name adds the next one. Double-click = rename.'],
-['نوع داده / دامنه','Data type / domain'],['منطق مشتق‌شدن','Derivation logic'],[' می‌تواند Null باشد',' can be Null'],['هم‌پوشانی','Overlap'],['کامل (Total)','Total'],['ناقص (Partial)','Partial'],['مجزا (Disjoint)','Disjoint'],['همپوشا (Overlapping)','Overlapping'],['یال متصل به زبرنوع باید «زبرنوع» علامت بخورد؛ بقیه یال‌ها زیرنوع‌اند.','Mark the edge to the supertype; the others are subtypes.'],['اتصال: ','Connection: '],['مشارکت الزامی (خط دوتایی)','Total participation (double line)'],['این یال به زبرنوع (Supertype) می‌رسد','This edge leads to the supertype'],['چندی (Cardinality)','Cardinality'],['مثلاً Real [0..20]','e.g. Real [0..20]'],['مثلاً Prerequisite','e.g. Prerequisite'],[' خطا، ',' errors, '],[' هشدار',' warnings'],['گزارش اعتبارسنجی','Validation report'],['مشکلی پیدا نشد.','No issues found.'],
-['عنصر بدون نام','Unnamed element'],['موجودیت بدون صفت','Entity without attributes'],['موجودیت قوی بدون شناسه','Strong entity without key'],['موجودیت ضعیف بدون رابطه شناسایی','Weak entity without identifying relationship'],['مشارکت موجودیت ضعیف الزامی نیست','Weak entity participation is not total'],['موجودیت ضعیف بدون کلید جزئی','Weak entity without partial key'],['رابطه بدون شرکت‌کننده','Relationship without participants'],['رابطه با شرکت‌کنندهٔ ناکافی','Relationship with too few participants'],['نقش تکراری','Duplicate role'],['رابطهٔ بازگشتی با نقش نامشخص','Recursive relationship without roles'],['رابطه شناسایی بدون موجودیت ضعیف','Identifying relationship without weak entity'],['چندی تعیین نشده','Cardinality not set'],['صفت رها','Orphan attribute'],['صفت مشتق بدون توضیح','Derived attribute without description'],['IS-A بدون زبرنوع','IS-A without supertype'],['IS-A بدون زیرنوع','IS-A without subtype'],['عنصر خارج از محدوده','Element out of range'],['نام موجودیت تکراری','Duplicate entity name'],
-[' نام ندارد؛ نام برای شناسایی در مدل لازم است.',' has no name; a name is required.'],[' صفتی ندارد. ابزار «اتصال» را بین موجودیت و یک صفت بزنید.',' has no attributes. Drag from its dot or press Tab to add one.'],[' هر نمونه را نمی‌تواند یکتا شناسایی کند. یک صفت شناسه اضافه کنید.',' cannot uniquely identify its instances. Add a key attribute.'],['باید از طریق لوزی دوتایی به موجودیت مالک وصل شود.','must connect to its owner entity via an identifying relationship.'],['موجودیت ضعیف باید در رابطه شناسایی مشارکت الزامی داشته باشد.','A weak entity must participate totally in its identifying relationship.'],['یک صفت «کلید جزئی» اضافه کنید.','Add a partial-key attribute.'],[' به هیچ موجودیتی وصل نیست.',' is not connected to any entity.'],['یک رابطه دست‌کم دو اتصال لازم دارد (رابطهٔ بازگشتی = دو اتصال به یک موجودیت).','A relationship needs at least two connections (recursive = two to the same entity).'],['دو شرکت‌کنندهٔ «','Two participants of «'],['» نقش یکسان دارند.','» share the same role.'],['برای هر یال به موجودیت تکراری نقش بگذارید.','Give each edge to the repeated entity a role.'],['لوزی دوتایی باید به یک موجودیت ضعیف وصل شود.','The double diamond must connect to a weak entity.'],['برای «','For «'],['» چندی (1/N/M) هر طرف را مشخص کنید.','» set the cardinality (1/N/M) of each side.'],['» به هیچ موجودیت یا رابطه‌ای وصل نیست.','» is not connected to anything.'],['منطق مشتق‌شدن «','Record how « '],['» را ثبت کنید.','» is derived.'],['یک یال را «زبرنوع» علامت بزنید.','Mark one edge as the supertype.'],['دست‌کم یک زیرنوع وصل کنید.','Connect at least one subtype.'],['با «نمایش همه» آن را پیدا کنید.','Use Fit all to find it.'],['» بیش از یک بار تعریف شده.','» is defined more than once.']];
-const M=new Map(D),F=D.filter(([a])=>a.length>5||/[«»]/.test(a)).sort((x,y)=>y[0].length-x[0].length);
-function tr(s){if(lang==='fa')return s;const t=s.trim();if(M.has(t))return s.replace(t,M.get(t));if(t.startsWith('+ ')&&M.has(t.slice(2)))return s.replace(t.slice(2),M.get(t.slice(2)));for(const[a,b]of F)s=s.split(a).join(b);return s}
-let busy=0;function apply(){busy=0;const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),L=[];let n;while(n=w.nextNode())L.push(n);for(const n of L){const p=n.parentNode.tagName;if(p==='SCRIPT'||p==='STYLE')continue;if(n.__o===undefined)n.__o=n.nodeValue;const v=tr(n.__o);if(n.nodeValue!==v)n.nodeValue=v}document.querySelectorAll('[placeholder]').forEach(e=>{e.dataset.o=e.dataset.o||e.placeholder;e.placeholder=tr(e.dataset.o)})}
-new MutationObserver(()=>{if(!busy){busy=1;requestAnimationFrame(apply)}}).observe(document.body,{childList:true,subtree:true,characterData:true});
-const _al=window.alert.bind(window),_pr=window.prompt.bind(window);window.alert=m=>_al(tr(m));window.prompt=(m,d)=>_pr(tr(m),d);
-function setLang(l){lang=l;try{localStorage.setItem('erl',l)}catch{}document.documentElement.dir=l==='fa'?'rtl':'ltr';document.documentElement.lang=l;document.querySelectorAll('.bL').forEach(b=>b.textContent=l==='fa'?'EN':'فا');P?(tools(),draw()):home();apply()}
-document.querySelectorAll('.bL').forEach(b=>b.onclick=()=>setLang(lang==='fa'?'en':'fa'));
-let RO=false;const BASE='https://claude.ai/artifact/9ZUbARt3DLeS59nHbAc1B7';
-D.push(['اشتراک','Share'],['اشتراک‌گذاری (فقط‌خواندنی)','Share (read-only)'],['دانلود .sql','Download .sql'],['کپی','Copy'],['کپی لینک','Copy link'],['کپی شد','Copied'],['لهجه','Dialect'],['خروجی SQL','SQL export'],['ساخت نسخه‌ی من','Make my copy'],['حالت فقط‌خواندنی','Read-only view'],['لینک اشتراک معتبر نیست.','Invalid share link.'],[' خطا در مدل هست؛ ممکن است SQL ناقص باشد.',' errors in the model; the SQL may be incomplete.'],['این لینک کل پروژه را (فشرده) در خود دارد و بدون سرور کار می‌کند. گیرنده نمودار را فقط‌خواندنی می‌بیند و می‌تواند نسخهٔ خودش را بسازد. خود صفحهٔ برنامه باید برای گیرنده قابل‌دسترسی باشد؛ در غیر این صورت فایل JSON بفرستید.','This link contains the whole project (compressed) and needs no server. The recipient sees the diagram read-only and can make their own copy. The app page itself must be accessible to them; otherwise send the JSON file.'],[' نویسه. لینک بسیار بلند است؛ اگر باز نشد از فایل JSON استفاده کنید.',' characters. The link is very long; if it fails to open use the JSON file.'],[' نویسه',' characters']);
-M.clear();D.forEach(([a,b])=>M.set(a,b));F.length=0;F.push(...D.filter(([a])=>a.length>5||/[«»]/.test(a)).sort((x,y)=>y[0].length-x[0].length));
-async function zip(x,en){const c=new (en?CompressionStream:DecompressionStream)('deflate-raw'),w=c.writable.getWriter();w.write(en?new TextEncoder().encode(x):x);w.close();return new Uint8Array(await new Response(c.readable).arrayBuffer())}
-function cpy(el){el.focus();el.select();let ok=false;try{ok=document.execCommand('copy')}catch{}if(!ok&&navigator.clipboard)navigator.clipboard.writeText(el.value).catch(()=>{});stat(tr('کپی شد'))}
-async function shareDlg(){const b=await zip(JSON.stringify(P),1);let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));const link=BASE+'#s'+btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-dlg(`<b>اشتراک‌گذاری (فقط‌خواندنی)</b><p class='mu'>این لینک کل پروژه را (فشرده) در خود دارد و بدون سرور کار می‌کند. گیرنده نمودار را فقط‌خواندنی می‌بیند و می‌تواند نسخهٔ خودش را بسازد. خود صفحهٔ برنامه باید برای گیرنده قابل‌دسترسی باشد؛ در غیر این صورت فایل JSON بفرستید.</p><textarea id='sl' rows='4' readonly style='direction:ltr'>${link}</textarea><p class='mu'>${link.length} نویسه${link.length>12000?'. لینک بسیار بلند است؛ اگر باز نشد از فایل JSON استفاده کنید.':''}</p><p><button class='pr' id='scp'>کپی لینک</button> <button id='no'>بستن</button></p>`);$('#scp').onclick=()=>cpy($('#sl'))}
-async function loadShare(){try{const t=location.hash.slice(2).replace(/-/g,'+').replace(/_/g,'/'),bin=atob(t+'='.repeat((4-t.length%4)%4)),p=JSON.parse(new TextDecoder().decode(await zip(Uint8Array.from(bin,c=>c.charCodeAt(0)),0)));if(!Array.isArray(p.nodes)||!Array.isArray(p.edges))throw 0;RO=true;open(p)}catch{alert('لینک اشتراک معتبر نیست.')}}
-function genSQL(dia){const d={mysql:0,pg:1,sqlite:2}[dia],q=s=>d===0?'`'+s+'`':'"'+s+'"',N=P.nodes,
-idf=s=>((s||'').trim().replace(/[^\p{L}\p{N}_]+/gu,'_').replace(/^_+|_+$/g,''))||'x',
-ty=(dt,k)=>{const s=(dt||'').toLowerCase(),y=/int/.test(s)?'int':/real|float|decimal|numeric|number|double/.test(s)?'real':/time/.test(s)?'ts':/date/.test(s)?'date':/bool/.test(s)?'bool':s?'str':k?'int':'str';return k&&y==='str'&&d<2?'VARCHAR(100)':{int:['INT','INTEGER','INTEGER'],real:['DECIMAL(10,2)','NUMERIC','REAL'],ts:['DATETIME','TIMESTAMP','TEXT'],date:['DATE','DATE','TEXT'],bool:['BOOLEAN','BOOLEAN','INTEGER'],str:['VARCHAR(255)','VARCHAR(255)','TEXT']}[y][d]},
-own=id=>nb(P,id).map(z=>z[1]).filter(o=>ATT.includes(o.type)),
-leaves=(a,pre,seen)=>{seen.add(a.id);const ch=own(a.id).filter(o=>!seen.has(o.id));return ch.length?ch.flatMap(c=>leaves(c,pre+idf(a.name)+'_',seen)):[{n:pre+idf(a.name),a}]},
-T2=new Map,used=new Set,
-mk=(k,nm)=>{let b=idf(nm),n=b,i=2;while(used.has(n.toLowerCase()))n=b+'_'+i++;used.add(n.toLowerCase());const t={name:n,cols:[],pk:[],fks:[],uq:[],cm:[],pkc:[]};T2.set(k,t);return t},
-col=(t,n,y,nn)=>{let c=n,i=2;while(t.cols.some(x=>x.n===c))c=n+'_'+i++;t.cols.push({n:c,t:y,nn});return c},
-base=y=>y.replace(' AUTO_INCREMENT','').replace('SERIAL','INTEGER'),
-fk=(t,r,pre,nn,del)=>{const cs=r.pkc.map(c=>col(t,pre+c.n,base(c.t),nn));t.fks.push({cs,ref:r.name,rc:r.pkc.map(c=>c.n),del});return cs},
-acols=(t,at,pk)=>at.forEach(a=>{if(a.type==='derived'){t.cm.push('derived: '+a.name+(a.desc?' = '+a.desc:''));return}if(a.type==='multi')return;const k=a.type==='key'||a.type==='pkey';leaves(a,'',new Set).forEach(l=>{const c=col(t,l.n,ty(l.a.dt,k),k||!l.a.nullable);k&&pk.push(c)})}),
-build=(e,st=[])=>{if(T2.has(e.id))return T2.get(e.id);if(st.includes(e.id))return;const t=mk(e.id,e.name),pk=[],isa=nb(P,e.id).find(([x,o])=>o.type==='isa'&&x.role!=='super');
-if(isa){const sp=nb(P,isa[1].id).find(([x,o])=>x.role==='super'&&ENT.includes(o.type)),s=sp&&build(sp[1],[...st,e.id]);if(s)pk.push(...fk(t,s,'',true,true));else t.cm.push('IS-A: supertype missing')}
-else if(e.type==='weak'){nb(P,e.id).filter(([,r])=>r.type==='idrel').flatMap(([,r])=>nb(P,r.id).map(z=>z[1]).filter(o=>ENT.includes(o.type)&&o.id!==e.id)).forEach(o=>{const s=build(o,[...st,e.id]);s&&pk.push(...fk(t,s,idf(o.name)+'_',true,true))});if(!pk.length)t.cm.push('weak entity: owner missing')}
-acols(t,own(e.id),isa?[]:pk);
-if(!pk.length){pk.push(col(t,idf(e.name)+'_id',d===0?'INT AUTO_INCREMENT':d===1?'SERIAL':'INTEGER',true));t.cm.push('no key attribute: surrogate key added')}
-t.pk=pk;t.pkc=pk.map(n=>({n,t:t.cols.find(c=>c.n===n).t}));return t},
-EN=N.filter(n=>ENT.includes(n.type));
-EN.forEach(e=>build(e));
-EN.forEach(e=>{const t=T2.get(e.id);own(e.id).filter(a=>a.type==='multi').forEach(a=>{const m=mk(a.id,t.name+'_'+idf(a.name)),pk=fk(m,t,t.name+'_',true,true);leaves(a,'',new Set).forEach(l=>pk.push(col(m,l.n,ty(l.a.dt),true)));m.pk=pk;m.cm.push('multivalued attribute '+a.name)})});
-N.filter(n=>n.type==='rel').forEach(r=>{const ps=nb(P,r.id).filter(([,o])=>ENT.includes(o.type)).map(([x,o])=>({x,o,t:T2.get(o.id),c:(x.card||'').toUpperCase(),ro:x.role?idf(x.role):''}));if(ps.length<2)return;const ra=own(r.id),one=p=>p.c==='1';
-if(ps.length===2&&(one(ps[0])||one(ps[1]))){const both=one(ps[0])&&one(ps[1]),pa=both?(ps[0].x.total&&!ps[1].x.total?ps[1]:ps[0]):(one(ps[0])?ps[0]:ps[1]),c=ps.find(p=>p!==pa),cs=fk(c.t,pa.t,(pa.ro||(pa.o===c.o?'parent':idf(pa.o.name)))+'_',!!c.x.total,false);both&&c.t.uq.push(cs);acols(c.t,ra,[]);c.t.cm.push('relationship '+r.name+(both?' (1:1)':' (1:N)'))}
-else{const t=mk(r.id,r.name),pk=[];ps.forEach(p=>pk.push(...fk(t,p.t,(p.ro||idf(p.o.name))+'_',true,true)));acols(t,ra,[]);t.pk=pk;t.cm.push('relationship '+r.name+(ps.length>2?' (n-ary)':' (M:N)')+(ps.every(p=>!p.c)?': cardinality not set, treated as M:N':''))}});
-const all=[...T2.values()],bn=new Map(all.map(t=>[t.name,t])),out=[],vis=new Set,vs=t=>{if(vis.has(t))return;vis.add(t);t.fks.forEach(f=>{const x=bn.get(f.ref);x&&x!==t&&vs(x)});out.push(t)};all.forEach(vs);
-let s=`-- ER Studio · ${P.name} · ${{mysql:'MySQL',pg:'PostgreSQL',sqlite:'SQLite'}[dia]}\n`+(validate(P).some(x=>x.l==='e')?'-- WARNING: the model has validation errors; this SQL may be incomplete.\n':'')+(d===2?'PRAGMA foreign_keys = ON;\n':'')+'\n';
-out.forEach(t=>{t.cm.forEach(c=>s+='-- '+c.replace(/\s+/g,' ')+'\n');const L=t.cols.map(c=>`  ${q(c.n)} ${c.t}${c.nn?' NOT NULL':''}`);t.pk.length&&L.push(`  PRIMARY KEY (${t.pk.map(q).join(', ')})`);t.uq.forEach(u=>L.push(`  UNIQUE (${u.map(q).join(', ')})`));t.fks.forEach(f=>L.push(`  FOREIGN KEY (${f.cs.map(q).join(', ')}) REFERENCES ${q(f.ref)} (${f.rc.map(q).join(', ')})${f.del?' ON DELETE CASCADE':''}`));s+=`CREATE TABLE ${q(t.name)} (\n${L.join(',\n')}\n)${d===0?' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4':''};\n\n`});return s}
-function sqlDlg(){const v=validate(P).filter(x=>x.l==='e').length;dlg(`<b>خروجی SQL</b><label>لهجه</label><select id='sd'><option value='mysql'>MySQL</option><option value='pg'>PostgreSQL</option><option value='sqlite'>SQLite</option></select>${v?`<p class='msg e'>${v} خطا در مدل هست؛ ممکن است SQL ناقص باشد.</p>`:''}<textarea id='sq' rows='13' readonly style='direction:ltr;font:12px monospace;margin-top:8px'></textarea><p><button class='pr' id='sdl'>دانلود .sql</button> <button id='scp'>کپی</button> <button id='no'>بستن</button></p>`);const g=()=>{try{$('#sq').value=genSQL($('#sd').value)}catch(e){$('#sq').value='-- error: '+e.message}};$('#sd').onchange=g;g();$('#sdl').onclick=()=>dl(P.name+'.sql',$('#sq').value,'text/plain');$('#scp').onclick=()=>cpy($('#sq'))}
-$('#bSql').onclick=sqlDlg;$('#bShare').onclick=shareDlg;$('#bCopy').onclick=async()=>{const c=clone(P,true);c.name+=' (کپی)';RO=false;try{location.hash=''}catch{}await dbPut(c);open(c)};
-setLang(lang);if(/^#s[\w-]{20,}$/.test(location.hash))loadShare();
-</script>
+  <input type="file" id="fi" accept=".json" hidden>
+  <script>
+    const T = { entity: 'موجودیت قوی', weak: 'موجودیت ضعیف', rel: 'رابطه', idrel: 'رابطه شناسایی', attr: 'صفت', key: 'صفت شناسه', pkey: 'کلید جزئی', multi: 'چندمقداری', derived: 'مشتق', isa: 'IS-A (EER)', note: 'یادداشت' };
+    const ATT = ['attr', 'key', 'pkey', 'multi', 'derived'], ENT = ['entity', 'weak'], REL = ['rel', 'idrel'];
+    const $ = s => document.querySelector(s), esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const uid = () => 'i' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+    let lang = (() => { try { return localStorage.getItem('erl') || 'fa' } catch { return 'fa' } })(); let P = null, sel = null, tool = 'sel', pend = null, V = { x: 0, y: 0, k: 1 }, grid = false, hist = [], fut = [], tmr = null, drag = null;
+    /* ---------- storage ---------- */
+    let db; const dbo = () => db || (db = new Promise((res, rej) => { const r = indexedDB.open('erstudio', 1); r.onupgradeneeded = () => r.result.createObjectStore('p', { keyPath: 'id' }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error) }));
+    async function tx(m, f) { const d = await dbo(); return new Promise((res, rej) => { const t = d.transaction('p', m), s = t.objectStore('p'), r = f(s); t.oncomplete = () => res(r.result); t.onerror = () => rej(t.error) }) }
+    const dbAll = () => tx('readonly', s => s.getAll()), dbPut = p => tx('readwrite', s => s.put(p)), dbDel = id => tx('readwrite', s => s.delete(id));
+    function stat(t) { $('#st').textContent = t }
+    function save() { WBX = 1; if (RO) return; stat('در حال ذخیره…'); clearTimeout(tmr); tmr = setTimeout(flush, 350) }
+    async function flush() { if (!P || RO) return; try { P.updated = Date.now(); await dbPut(P); stat('ذخیره شد') } catch (e) { stat('ذخیره ناموفق بود') } }
+    addEventListener('beforeunload', () => { if (P && !RO) dbPut(P) });
+    /* ---------- model ---------- */
+    const nn = (p, t, name, x, y, o = {}) => { const n = { id: uid(), type: t, name, x, y, ...o }; p.nodes.push(n); return n };
+    const ee = (p, a, b, o = {}) => { const e = { id: uid(), a: a.id, b: b.id, total: false, card: '', role: '', ...o }; p.edges.push(e); return e };
+    function newP(name, type, desc) { return { id: uid(), schemaVersion: 1, name, type, desc: desc || '', created: Date.now(), updated: Date.now(), nodes: [], edges: [] } }
+    function sample() {
+      const p = newP('نمونه: ثبت‌نام دانشجو', 'ER', ''); const s = nn(p, 'entity', 'Student', 120, 200), c = nn(p, 'entity', 'Course', 520, 200), r = nn(p, 'rel', 'Enrolls', 320, 200);
+      ee(p, s, r, { total: true, card: 'M' }); ee(p, r, c, { card: 'N' });
+      const a = nn(p, 'key', 'StudentID', 60, 80), b = nn(p, 'attr', 'Name', 200, 80), d = nn(p, 'key', 'CourseID', 480, 80), g = nn(p, 'attr', 'Semester', 320, 320);
+      ee(p, s, a); ee(p, s, b); ee(p, c, d); ee(p, r, g); return p
+    }
+    const nb = (p, id) => p.edges.filter(e => e.a === id || e.b === id).map(e => [e, p.nodes.find(n => n.id === (e.a === id ? e.b : e.a))]);
+    /* ---------- home ---------- */
+    async function home() {
+      P = null; RO = false; $('#ed').style.display = 'none'; $('#home').style.display = 'block'; let l = await dbAll(); const q = $('#q').value.trim().toLowerCase();
+      l = l.filter(p => p.name.toLowerCase().includes(q)); l.sort($('#so').value === 'n' ? (a, b) => a.name.localeCompare(b.name) : (a, b) => b.updated - a.updated);
+      $('#list').innerHTML = l.length ? l.map(p => `<div class="card"><div class="t"><b data-o="${p.id}">${esc(p.name)}</b> <span class="mu">(${p.type})</span><div class="mu">${p.nodes.filter(n => ENT.includes(n.type)).length} موجودیت · ${p.nodes.filter(n => REL.includes(n.type)).length} رابطه · ${p.nodes.length} عنصر · ${new Date(p.updated).toLocaleString(lang === 'fa' ? 'fa-IR' : 'en-GB')}</div></div><button data-o="${p.id}" class="pr">باز کردن</button><button data-r="${p.id}">تغییر نام</button><button data-d="${p.id}">تکثیر</button><button data-x="${p.id}">خروجی</button><button class="dg" data-z="${p.id}">حذف</button></div>`).join('') : '<div class="mu">هنوز پروژه‌ای ندارید. با «پروژهٔ جدید» شروع کنید.</div>'
+    }
+    $('#list').onclick = async e => {
+      const t = e.target, g = k => t.dataset[k]; const all = await dbAll(), f = id => all.find(p => p.id === id);
+      if (g('o')) open(f(g('o'))); else if (g('r')) { const p = f(g('r')), v = prompt('نام جدید', p.name); if (v?.trim()) { p.name = v.trim(); p.updated = Date.now(); await dbPut(p); home() } }
+      else if (g('d')) { const p = clone(f(g('d')), true); p.name += ' (کپی)'; await dbPut(p); home() }
+      else if (g('x')) dl(f(g('x')).name + '.er.json', JSON.stringify({ schemaVersion: 1, project: f(g('x')) }, null, 1));
+      else if (g('z')) { const p = f(g('z')); dlg(`<b>حذف «${esc(p.name)}»؟</b><p class="mu">این پروژه برای همیشه از این مرورگر حذف می‌شود. پروژه‌های دیگر تغییر نمی‌کنند.</p><button class="dg" id="ok">حذف کن</button> <button id="no">انصراف</button>`, async () => { await dbDel(p.id); home() }) }
+    }
+    $('#q').oninput = home; $('#so').onchange = home;
+    function clone(p, fresh) { const c = JSON.parse(JSON.stringify(p)); if (fresh) { const m = {}; c.id = uid(); c.created = c.updated = Date.now(); c.nodes.forEach(n => { const o = n.id; n.id = uid(); m[o] = n.id }); c.edges.forEach(e => { e.id = uid(); e.a = m[e.a]; e.b = m[e.b] }) } return c }
+    function dlg(h, ok) { $('#dlgc').innerHTML = h; $('#dlg').style.display = 'flex'; const c = () => $('#dlg').style.display = 'none'; $('#no') && ($('#no').onclick = c); $('#ok') && ($('#ok').onclick = () => { c(); ok && ok() }) }
+    $('#bNew').onclick = () => dlg(`<b>پروژهٔ جدید</b><label>نام</label><input id="fn" value="پروژهٔ جدید"><label>توضیحات (اختیاری)</label><input id="fd"><label>نوع</label><select id="ft"><option>ER</option><option>EER</option></select><p class="mu">ER برای نمودار پایه است؛ EER ابزار IS-A را هم فعال می‌کند.</p><button class="pr" id="ok">ایجاد</button> <button id="no">انصراف</button>`, () => { const p = newP($('#fn').value.trim() || 'بدون نام', $('#ft').value, $('#fd').value); dbPut(p).then(() => open(p)) });
+    $('#bSample').onclick = async () => { const p = sample(); await dbPut(p); open(p) };
+    $('#bAll').onclick = async () => dl('er-backup.json', JSON.stringify({ schemaVersion: 1, projects: await dbAll() }));
+    $('#bImp').onclick = $('#bImp2').onclick = () => $('#fi').click();
+    $('#fi').onchange = async e => {
+      const f = e.target.files[0]; e.target.value = ''; if (!f) return; let d; try { d = JSON.parse(await f.text()) } catch { return alert('فایل JSON معتبر نیست.') }
+      if (typeof d.schemaVersion !== 'number') return alert('فایل نسخهٔ Schema ندارد.'); if (d.schemaVersion > 1) return alert('این فایل با نسخهٔ جدیدتری ساخته شده و قابل وارد کردن نیست.');
+      const L = d.projects || (d.project ? [d.project] : null); if (!L) return alert('پروژه‌ای در فایل پیدا نشد.');
+      for (const p of L) { if (!Array.isArray(p.nodes) || !Array.isArray(p.edges)) return alert('ساختار پروژه خراب است.'); const ids = new Set(p.nodes.map(n => n.id)); if (p.edges.some(x => !ids.has(x.a) || !ids.has(x.b))) return alert('فایل ارجاع شکسته دارد (اتصال به عنصر ناموجود).') }
+      dlg(`<b>وارد کردن ${L.length} پروژه</b><div class="mu">${L.map(p => esc(p.name) + ' (' + p.nodes.length + ' عنصر)').join('<br>')}</div><p>پروژه‌ها با شناسهٔ جدید و به‌صورت پروژهٔ تازه اضافه می‌شوند و داده‌های فعلی بازنویسی نمی‌شوند.</p><button class="pr" id="ok">وارد کن</button> <button id="no">انصراف</button>`, async () => { for (const p of L) { const c = clone(p, true); c.name += ' (واردشده)'; await dbPut(c) } P ? await home() : home() })
+    };
+    function dl(n, t, m = 'application/json') { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: m })); a.download = n; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 999) }
+    /* ---------- editor ---------- */
+    function open(p) { P = p; wb = false; WBX = 1; $('#bWb').classList.remove('on'); $('#ed').classList.remove('wb'); $('#ed').classList.toggle('ro', RO); sel = null; tool = 'sel'; pend = null; hist = []; fut = []; $('#home').style.display = 'none'; $('#ed').style.display = 'grid'; $('#pn').textContent = p.name + ' (' + p.type + ')'; stat('ذخیره شد'); tools(); fit(); draw() }
+    $('#bBack').onclick = async () => { await flush(); home() };
+    function tools() { const L = Object.keys(T).filter(k => k !== 'isa' || P.type === 'EER'); $('#tools').innerHTML = `<button data-t="sel" class="${tool === 'sel' ? 'on' : ''}">انتخاب / جابه‌جایی</button><button data-t="link" class="${tool === 'link' ? 'on' : ''}">اتصال دو عنصر</button><hr>` + L.map(k => `<button data-t="${k}" class="${tool === k ? 'on' : ''}">+ ${T[k]}</button>`).join('') + `<hr><button id="bDel" class="dg">حذف انتخاب</button>` }
+    $('#tools').onclick = e => { const t = e.target.dataset.t; if (t) { tool = t; pend = null; tools(); hint() } if (e.target.id === 'bDel') del() };
+    function hint() { stat(tool === 'link' ? 'عنصر اول را انتخاب کنید، سپس عنصر دوم' : tool !== 'sel' ? 'روی بوم کلیک کنید تا «' + T[tool] + '» اضافه شود' : '') }
+    function snap() { hist.push(JSON.stringify({ n: P.nodes, e: P.edges })); if (hist.length > 100) hist.shift(); fut = [] }
+    function restore(s) { const o = JSON.parse(s); P.nodes = o.n; P.edges = o.e; sel = null; draw(); save() }
+    $('#bUn').onclick = undo; $('#bRe').onclick = redo;
+    function undo() { if (!hist.length) return; fut.push(JSON.stringify({ n: P.nodes, e: P.edges })); restore(hist.pop()) }
+    function redo() { if (!fut.length) return; hist.push(JSON.stringify({ n: P.nodes, e: P.edges })); restore(fut.pop()) }
+    const dim = n => { const l = (n.name || '').length; if (ATT.includes(n.type)) return [Math.max(76, l * 8 + 34), 40]; if (REL.includes(n.type)) return [Math.max(96, l * 9 + 56), 64]; if (n.type === 'isa') return [36, 36]; return [Math.max(96, l * 9 + 34), 46] };
+    function clip(n, dx, dy) { const [w, h] = dim(n), a = w / 2, b = h / 2; if (!dx && !dy) return 0; let t; if (ENT.includes(n.type) || n.type === 'note') t = Math.min(a / Math.abs(dx || 1e-9), b / Math.abs(dy || 1e-9)); else if (REL.includes(n.type)) t = 1 / (Math.abs(dx) / a + Math.abs(dy) / b); else t = 1 / Math.sqrt((dx / a) ** 2 + (dy / b) ** 2); return t }
+    function shape(n) {
+      const [w, h] = dim(n), a = w / 2, b = h / 2, t = n.type; let s = '';
+      if (ENT.includes(t)) s = `<rect class="sh" x="${-a}" y="${-b}" width="${w}" height="${h}"/>` + (t === 'weak' ? `<rect class="sh" style="fill:none" x="${-a + 5}" y="${-b + 5}" width="${w - 10}" height="${h - 10}"/>` : '');
+      else if (REL.includes(t)) s = `<polygon class="sh" points="0,${-b} ${a},0 0,${b} ${-a},0"/>` + (t === 'idrel' ? `<polygon class="sh" style="fill:none" points="0,${-b + 7} ${a - 11},0 0,${b - 7} ${-a + 11},0"/>` : '');
+      else if (t === 'isa') return `<circle class="sh" r="18"/><text class="tx" style="font-size:12px">${n.dis === 'o' ? 'o' : 'd'}</text>`;
+      else if (t === 'note') return `<rect class="sh" style="stroke-dasharray:4 3;fill:none" x="${-a}" y="${-b}" width="${w}" height="${h}"/><text class="tx">${esc(n.name)}</text>`;
+      else s = `<ellipse class="sh" ${t === 'derived' ? 'style="stroke-dasharray:5 3"' : ''} rx="${a}" ry="${b}"/>` + (t === 'multi' ? `<ellipse class="sh" style="fill:none" rx="${a - 5}" ry="${b - 5}"/>` : '');
+      const ul = t === 'key' ? 'underline' : t === 'pkey' ? 'underline dashed' : 'none'; return s + `<text class="tx" style="text-decoration:${ul}">${esc(n.name)}</text>`
+    }
+    function draw() {
+      if (wb) { drawWb(); return } const m = new Map(P.nodes.map(n => [n.id, n])), cnt = {}; let h = '';
+      P.edges.forEach(e => {
+        const A = m.get(e.a), B = m.get(e.b); if (!A || !B) return; const k = [e.a, e.b].sort().join(), i = cnt[k] = (cnt[k] || 0) + 1, tot = P.edges.filter(x => [x.a, x.b].sort().join() === k).length, off = (i - (tot + 1) / 2) * 14;
+        let dx = B.x - A.x, dy = B.y - A.y; const L = Math.hypot(dx, dy) || 1, px = -dy / L * off, py = dx / L * off;
+        const ta = clip(A, dx, dy), tb = clip(B, -dx, -dy), x1 = A.x + dx * ta + px, y1 = A.y + dy * ta + py, x2 = B.x - dx * tb + px, y2 = B.y - dy * tb + py, d = `M${x1} ${y1}L${x2} ${y2}`;
+        const isaTot = (A.type === 'isa' || B.type === 'isa') && e.role === 'super' && (A.cover || B.cover) === 'total';
+        const dbl = e.total || isaTot, c = e.id === sel ? ' style="stroke:var(--ac)"' : '';
+        h += `<g data-e="${e.id}"><path class="hit" d="${d}"/><path class="ln"${c} d="${d}" ${dbl ? 'stroke-width="5"' : ''}/>${dbl ? `<path class="ln2" d="${d}"/>` : ''}`;
+        const ent = ENT.includes(B.type) || B.type === 'attr' ? B : A, oth = ent === B ? A : B, lt = ent === B ? .78 : .22, lx = x1 + (x2 - x1) * lt + (py ? py * .5 : 0), ly = y1 + (y2 - y1) * lt - 8;
+        const lab = [e.card, e.role].filter(Boolean).join(' · '); if (lab) h += `<text class="lb" x="${lx}" y="${ly}">${esc(lab)}</text>`; h += '</g>'
+      });
+      P.nodes.forEach(n => { const [w, hh] = dim(n), a = w / 2, b = hh / 2; h += `<g data-n="${n.id}" class="${n.id === sel || n.id === pend ? 'sel' : ''}" transform="translate(${n.x} ${n.y})" style="cursor:move">${shape(n)}${[[a, 0], [-a, 0], [0, -b], [0, b]].map(([x, y]) => `<circle class="hd" data-h="1" cx="${x}" cy="${y}" r="6"/>`).join('')}</g>` }); if (drag && drag.t === 'c') { const A = m.get(drag.from); h += `<path class="ln" style="stroke:var(--ac);stroke-dasharray:5 4;pointer-events:none" d="M${A.x} ${A.y}L${drag.x} ${drag.y}"/>` }
+      let g = ''; if (grid) { const s = 40 * V.k; g = '' }
+      $('#vp').setAttribute('transform', `translate(${V.x} ${V.y}) scale(${V.k})`); $('#vp').innerHTML = h; $('#cv').style.backgroundImage = grid ? `radial-gradient(var(--gr) 1.2px,transparent 1.2px)` : 'none'; $('#cv').style.backgroundSize = `${20 * V.k}px ${20 * V.k}px`; $('#cv').style.backgroundPosition = `${V.x}px ${V.y}px`;
+      panel()
+    }
+    const cp = ev => { const r = $('#cv').getBoundingClientRect(); return { x: (ev.clientX - r.left - V.x) / V.k, y: (ev.clientY - r.top - V.y) / V.k } };
+    const sn = v => grid ? Math.round(v / 20) * 20 : v;
+    $('#cv').onpointerdown = ev => {
+      if (wb) { drag = { t: 'p', sx: ev.clientX - V.x, sy: ev.clientY - V.y }; const g = ev.target.closest('[data-wt]'); wsel = g ? g.dataset.wt : null; draw(); $('#cv').setPointerCapture(ev.pointerId); return } if (RO) { const g = ev.target.closest('[data-n]'); sel = g ? g.dataset.n : null; drag = g ? null : { t: 'p', sx: ev.clientX - V.x, sy: ev.clientY - V.y }; draw(); $('#cv').setPointerCapture(ev.pointerId); return } const gn = ev.target.closest('[data-n]'), ge = ev.target.closest('[data-e]'), p = cp(ev);
+      if (tool === 'link') { if (gn) { const id = gn.dataset.n; if (!pend) pend = id; else { snap(); ee(P, P.nodes.find(n => n.id === pend), P.nodes.find(n => n.id === id)); pend = null; sel = P.edges.at(-1).id; save() } draw() } return }
+      if (tool !== 'sel') { snap(); const base = tool === 'isa' ? { cover: 'partial', dis: 'd' } : {}; const n = nn(P, tool, tr(T[tool].replace(' (EER)', '')), sn(p.x), sn(p.y), { ...base, dt: '', nullable: true, desc: '' }); sel = n.id; tool = 'sel'; tools(); stat(''); save(); draw(); return }
+      if (gn && ev.target.closest('[data-h]')) { sel = gn.dataset.n; drag = { t: 'c', from: sel, x: p.x, y: p.y }; draw() } else if (gn) { sel = gn.dataset.n; const n = P.nodes.find(n => n.id === sel); drag = { t: 'n', ox: p.x - n.x, oy: p.y - n.y, s: false }; draw() }
+      else if (ge) { sel = ge.dataset.e; draw() } else { sel = null; drag = { t: 'p', sx: ev.clientX - V.x, sy: ev.clientY - V.y }; draw() }
+      $('#cv').setPointerCapture(ev.pointerId)
+    };
+    $('#cv').onpointermove = ev => {
+      if (!drag) return; if (drag.t === 'c') { const q = cp(ev); drag.x = q.x; drag.y = q.y; draw(); return } if (drag.t === 'p') { V.x = ev.clientX - drag.sx; V.y = ev.clientY - drag.sy; draw(); return }
+      const p = cp(ev), n = P.nodes.find(n => n.id === sel); if (!drag.s) { snap(); drag.s = true } n.x = sn(p.x - drag.ox); n.y = sn(p.y - drag.oy); draw()
+    };
+    $('#cv').onpointerup = ev => { const d = drag; drag = null; if (d && d.t === 'c') finish(d, ev); else if (d && d.s) save(); draw() };
+    function focusName() { setTimeout(() => { const i = $('#side [data-f=name]'); i && (i.focus(), i.select()) }, 30) }
+    function finish(d, ev) {
+      const A = P.nodes.find(n => n.id === d.from), el = document.elementFromPoint(ev.clientX, ev.clientY), g = el && el.closest('[data-n]'), B = g && P.nodes.find(n => n.id === g.dataset.n), p = cp(ev), nw = o => ({ dt: '', nullable: true, desc: '', ...o });
+      if (Math.hypot(p.x - A.x, p.y - A.y) < 30) return;
+      if (B && B !== A) {
+        if (ENT.includes(A.type) && ENT.includes(B.type)) { snap(); const r = nn(P, 'rel', tr('رابطه'), sn((A.x + B.x) / 2), sn((A.y + B.y) / 2), nw()); ee(P, A, r); ee(P, r, B); sel = r.id; save(); focusName() }
+        else if (!REL.includes(A.type) && !REL.includes(B.type) && P.edges.some(e => (e.a === A.id && e.b === B.id) || (e.a === B.id && e.b === A.id))) return; else { snap(); sel = ee(P, A, B).id; save() }
+      }
+      else if (!B && !['isa', 'note'].includes(A.type)) { snap(); const m = nn(P, 'attr', tr('صفت'), sn(p.x), sn(p.y), nw({ par: A.id })); ee(P, A, m); sel = m.id; save(); focusName() }
+    }
+    function quick(t) { const n = P.nodes.find(n => n.id === sel); if (!n || ['isa', 'note'].includes(n.type)) return; snap(); const k = nb(P, n.id).filter(([, o]) => ATT.includes(o.type)).length, an = -1.2 + k * .75, R = Math.max(dim(n)[0] / 2, 40) + 85, m = nn(P, t, tr(T[t]) + ' ' + (k + 1), sn(n.x + R * Math.cos(an)), sn(n.y + R * Math.sin(an)), { dt: '', nullable: true, desc: '', par: n.id }); ee(P, n, m); sel = m.id; save(); draw(); focusName() }
+    $('#side').addEventListener('keydown', ev => { if (ev.key === 'Enter' && ev.target.dataset.f === 'name') { const n = P.nodes.find(n => n.id === sel); if (n && n.par && ATT.includes(n.type) && P.nodes.some(x => x.id === n.par)) { const t = n.type; sel = n.par; quick(t) } } });
+    $('#cv').ondblclick = ev => { if (RO || wb) return; const g = ev.target.closest('[data-n]'); if (!g) return; const n = P.nodes.find(n => n.id === g.dataset.n), v = prompt('نام', n.name); if (v !== null) { snap(); n.name = v; save(); draw() } };
+    $('#cv').onwheel = ev => { ev.preventDefault(); const p = cp(ev), k = Math.min(3, Math.max(.25, V.k * (ev.deltaY < 0 ? 1.1 : .9))); const r = $('#cv').getBoundingClientRect(); V.x = ev.clientX - r.left - p.x * k; V.y = ev.clientY - r.top - p.y * k; V.k = k; draw() };
+    function fit() { if (wb) { fitWb(); return } if (!P.nodes.length) { V = { x: 200, y: 100, k: 1 }; return } const r = $('#cv').getBoundingClientRect(), xs = P.nodes.map(n => n.x), ys = P.nodes.map(n => n.y), x0 = Math.min(...xs) - 120, x1 = Math.max(...xs) + 120, y0 = Math.min(...ys) - 90, y1 = Math.max(...ys) + 90, k = Math.min(2, r.width / (x1 - x0) || 1, r.height / (y1 - y0) || 1) || 1; V = { k, x: -x0 * k + (r.width - (x1 - x0) * k) / 2, y: -y0 * k + (r.height - (y1 - y0) * k) / 2 } }
+    $('#bFit').onclick = () => { fit(); draw() }; $('#bGrid').onclick = function () { grid = !grid; this.classList.toggle('on', grid); draw() };
+    function del() {
+      if (!sel) return; const n = P.nodes.find(n => n.id === sel), links = n ? nb(P, n.id).length : 0;
+      const go = () => { snap(); if (n) { P.nodes = P.nodes.filter(x => x.id !== sel); P.edges = P.edges.filter(e => e.a !== sel && e.b !== sel) } else P.edges = P.edges.filter(e => e.id !== sel); sel = null; save(); draw() };
+      if (n && links) dlg(`<b>حذف «${esc(n.name)}»؟</b><p class="mu">${links} اتصال به این عنصر نیز حذف می‌شود. با «واگرد» می‌توانید برگردانید.</p><button class="dg" id="ok">حذف کن</button> <button id="no">انصراف</button>`, go); else go()
+    }
+    addEventListener('keydown', e => { if (!P || RO || wb || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo() } else if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo() } else if (e.key === 'Tab' && sel && P.nodes.some(n => n.id === sel)) { e.preventDefault(); quick('attr') } else if (e.key === 'Delete' || e.key === 'Backspace') del(); else if (e.key === 'Escape') { tool = 'sel'; pend = null; tools(); draw() } });
+    /* ---------- panel ---------- */
+    const row = (l, h) => `<label>${l}</label>${h}`, opt = (v, L, c) => L.map(([a, b]) => `<option value="${a}" ${a === c ? 'selected' : ''}>${b}</option>`).join('');
+    function panel() {
+      if (wb) { wbPanel(); return } const s = $('#side'), n = P.nodes.find(n => n.id === sel), e = P.edges.find(x => x.id === sel); let h = '';
+      if (n) {
+        const fam = ATT.includes(n.type) ? ATT : ENT.includes(n.type) ? ENT : REL.includes(n.type) ? REL : [n.type];
+        h = `<b>${T[n.type]}</b>` + row('نام', `<input data-f="name" value="${esc(n.name)}">`) + row('نوع', `<select data-f="type">${opt(0, fam.map(k => [k, T[k]]), n.type)}</select>`);
+        if (ATT.includes(n.type)) h += row('نوع داده / دامنه', `<input data-f="dt" value="${esc(n.dt)}" placeholder="مثلاً Real [0..20]">`) + `<label><input type="checkbox" data-f="nullable" ${n.nullable ? 'checked' : ''} style="width:auto"> می‌تواند Null باشد</label>` + (n.type === 'derived' ? row('منطق مشتق‌شدن', `<input data-f="desc" value="${esc(n.desc)}">`) : '');
+        if (n.type === 'isa') h += row('پوشش', `<select data-f="cover">${opt(0, [['total', 'کامل (Total)'], ['partial', 'ناقص (Partial)']], n.cover)}</select>`) + row('هم‌پوشانی', `<select data-f="dis">${opt(0, [['d', 'مجزا (Disjoint)'], ['o', 'همپوشا (Overlapping)']], n.dis)}</select>`) + `<p class="mu">یال متصل به زبرنوع باید «زبرنوع» علامت بخورد؛ بقیه یال‌ها زیرنوع‌اند.</p>`;
+        if (!['isa', 'note'].includes(n.type)) { const Q = ENT.includes(n.type) ? ['attr', 'key', ...(n.type === 'weak' ? ['pkey'] : []), 'multi', 'derived'] : ['attr', 'multi', 'derived']; h += `<label>افزودن سریع صفت (Tab)</label>` + Q.map(k => `<button data-q="${k}">+ ${T[k]}</button>`).join(' ') } const nbs = nb(P, n.id); h += `<label>اتصال‌ها</label>` + (nbs.map(([x, o]) => `<div class="msg" data-sel="${x.id}">${esc(o.name)} (${T[o.type]})</div>`).join('') || '<span class="mu">بدون اتصال</span>') + `<p><button class="dg" id="pd">حذف</button></p>`
+      }
+      else if (e) {
+        const A = P.nodes.find(n => n.id === e.a), B = P.nodes.find(n => n.id === e.b), isaE = A.type === 'isa' || B.type === 'isa';
+        h = `<b>اتصال: ${esc(A.name)} ↔ ${esc(B.name)}</b>`;
+        if (isaE) h += `<label><input type="checkbox" data-g="sup" ${e.role === 'super' ? 'checked' : ''} style="width:auto"> این یال به زبرنوع (Supertype) می‌رسد</label>`;
+        else { h += `<label><input type="checkbox" data-g="total" ${e.total ? 'checked' : ''} style="width:auto"> مشارکت الزامی (خط دوتایی)</label>` + row('چندی (Cardinality)', `<select data-g="card">${opt(0, [['', '—'], ['1', '1'], ['N', 'N'], ['M', 'M']], e.card)}</select>`) + row('نقش', `<input data-g="role" value="${esc(e.role)}" placeholder="مثلاً Prerequisite">`) }
+        h += `<p><button class="dg" id="pd">حذف اتصال</button></p>`
+      }
+      else h = `<span class="mu">موس را روی عنصر ببرید تا نقطه‌های اتصال ظاهر شوند؛ از نقطه به عنصر دیگر بکشید تا وصل شود (دو موجودیت ⇐ رابطهٔ خودکار). رها کردن در فضای خالی یک صفت می‌سازد. موجودیت را انتخاب کنید و Tab بزنید تا صفت اضافه شود؛ بعد از تایپ نام، Enter صفت بعدی را می‌سازد. دوبار کلیک = تغییر نام.</span>`;
+      const v = validate(P); h += `<hr><b>اعتبارسنجی</b> <span class="mu">${v.filter(x => x.l === 'e').length} خطا، ${v.filter(x => x.l === 'w').length} هشدار</span>` + v.map(x => `<div class="msg ${x.l}" data-sel="${x.id || ''}"><b>${esc(x.t)}</b><br>${esc(x.m)}</div>`).join('');
+      s.innerHTML = h; if (RO) s.querySelectorAll('input,select,textarea,button').forEach(x => x.disabled = true)
+    }
+    $('#side').oninput = $('#side').onchange = ev => {
+      const t = ev.target, n = P.nodes.find(n => n.id === sel), e = P.edges.find(x => x.id === sel); if (t.dataset.f && n) { snap(); n[t.dataset.f] = t.type === 'checkbox' ? t.checked : t.value; if (t.dataset.f === 'type' && n.type === 'isa') { n.cover = n.cover || 'partial'; n.dis = n.dis || 'd' } }
+      else if (t.dataset.g && e) { snap(); const g = t.dataset.g; if (g === 'sup') e.role = t.checked ? 'super' : ''; else e[g] = t.type === 'checkbox' ? t.checked : t.value } else return; save(); const f = document.activeElement, k = f && f.dataset.f || f && f.dataset.g, ss = f && f.selectionStart; draw(); if (k && ev.type === 'input') { const q = $(`#side [data-f="${k}"],#side [data-g="${k}"]`); q && (q.focus(), q.setSelectionRange && ss != null && q.setSelectionRange(ss, ss)) }
+    };
+    $('#side').onclick = ev => { const w = ev.target.closest('[data-wt]'); if (w) { const r = WBR.find(r => r.t.name === w.dataset.wt); if (r) { const b = $('#cv').getBoundingClientRect(); V.x = b.width / 2 - r.x * V.k; V.y = b.height / 2 - r.y * V.k; wsel = r.t.name; draw() } return } const t = ev.target.closest('[data-sel]'); if (t && t.dataset.sel) { sel = t.dataset.sel; const n = P.nodes.find(n => n.id === sel); if (n) { const r = $('#cv').getBoundingClientRect(); V.x = r.width / 2 - n.x * V.k; V.y = r.height / 2 - n.y * V.k } draw() } if (ev.target.id === 'pd') del(); if (ev.target.dataset.q) quick(ev.target.dataset.q) };
+    $('#bVal').onclick = () => { const v = validate(P); dlg(`<b>گزارش اعتبارسنجی</b>` + (v.length ? v.map(x => `<div class="msg ${x.l}"><b>${esc(x.t)}</b><br>${esc(x.m)}</div>`).join('') : '<p>مشکلی پیدا نشد.</p>') + `<p><button id="no">بستن</button></p>`) };
+    /* ---------- validation ---------- */
+    function validate(p) {
+      const r = [], add = (l, t, m, id) => r.push({ l, t, m, id });
+      p.nodes.forEach(n => {
+        const nm = n.name?.trim(), nbs = nb(p, n.id);
+        if (!nm) add('e', 'عنصر بدون نام', T[n.type] + ' نام ندارد؛ نام برای شناسایی در مدل لازم است.', n.id);
+        if (ENT.includes(n.type)) {
+          const at = nbs.filter(([, o]) => ATT.includes(o.type));
+          if (!at.length) add('w', 'موجودیت بدون صفت', '«' + nm + '» صفتی ندارد. ابزار «اتصال» را بین موجودیت و یک صفت بزنید.', n.id);
+          if (n.type === 'entity' && !at.some(([, o]) => o.type === 'key') && !nbs.some(([, o]) => o.type === 'isa')) add('e', 'موجودیت قوی بدون شناسه', '«' + nm + '» هر نمونه را نمی‌تواند یکتا شناسایی کند. یک صفت شناسه اضافه کنید.', n.id);
+          if (n.type === 'weak') {
+            const id = nbs.filter(([, o]) => o.type === 'idrel'); if (!id.length) add('e', 'موجودیت ضعیف بدون رابطه شناسایی', '«' + nm + '» باید از طریق لوزی دوتایی به موجودیت مالک وصل شود.', n.id); else if (!id.some(([e]) => e.total)) add('w', 'مشارکت موجودیت ضعیف الزامی نیست', 'موجودیت ضعیف باید در رابطه شناسایی مشارکت الزامی داشته باشد.', n.id);
+            if (!at.some(([, o]) => o.type === 'pkey')) add('e', 'موجودیت ضعیف بدون کلید جزئی', 'یک صفت «کلید جزئی» اضافه کنید.', n.id)
+          }
+        }
+        if (REL.includes(n.type)) {
+          const en = nbs.filter(([, o]) => ENT.includes(o.type) || o.type === 'isa' || REL.includes(o.type));
+          if (!en.length) add('e', 'رابطه بدون شرکت‌کننده', '«' + nm + '» به هیچ موجودیتی وصل نیست.', n.id);
+          else if (en.length < 2) add('e', 'رابطه با شرکت‌کنندهٔ ناکافی', 'یک رابطه دست‌کم دو اتصال لازم دارد (رابطهٔ بازگشتی = دو اتصال به یک موجودیت).', n.id);
+          const roles = en.map(([e]) => e.role).filter(Boolean); if (new Set(roles).size < roles.length) add('w', 'نقش تکراری', 'دو شرکت‌کنندهٔ «' + nm + '» نقش یکسان دارند.', n.id);
+          const ids = en.map(([, o]) => o.id); if (new Set(ids).size < ids.length && en.some(([e]) => !e.role)) add('w', 'رابطهٔ بازگشتی با نقش نامشخص', 'برای هر یال به موجودیت تکراری نقش بگذارید.', n.id);
+          if (n.type === 'idrel' && !en.some(([, o]) => o.type === 'weak')) add('e', 'رابطه شناسایی بدون موجودیت ضعیف', 'لوزی دوتایی باید به یک موجودیت ضعیف وصل شود.', n.id);
+          if (en.length >= 2 && en.every(([e]) => !e.card)) add('i', 'چندی تعیین نشده', 'برای «' + nm + '» چندی (1/N/M) هر طرف را مشخص کنید.', n.id)
+        }
+        if (ATT.includes(n.type) && !nbs.length) add('w', 'صفت رها', '«' + nm + '» به هیچ موجودیت یا رابطه‌ای وصل نیست.', n.id);
+        if (n.type === 'derived' && !n.desc) add('i', 'صفت مشتق بدون توضیح', 'منطق مشتق‌شدن «' + nm + '» را ثبت کنید.', n.id);
+        if (n.type === 'isa') { const sup = nbs.filter(([e]) => e.role === 'super'), sub = nbs.filter(([e]) => e.role !== 'super'); if (!sup.length) add('e', 'IS-A بدون زبرنوع', 'یک یال را «زبرنوع» علامت بزنید.', n.id); if (!sub.length) add('e', 'IS-A بدون زیرنوع', 'دست‌کم یک زیرنوع وصل کنید.', n.id) }
+        if (Math.abs(n.x) > 5000 || Math.abs(n.y) > 5000) add('w', 'عنصر خارج از محدوده', 'با «نمایش همه» آن را پیدا کنید.', n.id)
+      });
+      const nm = p.nodes.filter(n => ENT.includes(n.type)).map(n => n.name?.trim().toLowerCase()); nm.forEach((x, i) => { if (x && nm.indexOf(x) !== i) add('w', 'نام موجودیت تکراری', '«' + x + '» بیش از یک بار تعریف شده.') });
+      const g = {}; p.edges.filter(e => e.role === 'super').forEach(e => { const i = p.nodes.find(n => n.id === e.a).type === 'isa' ? e.a : e.b, s = i === e.a ? e.b : e.a; g[i] = s });
+      return r
+    }
+    /* ---------- export ---------- */
+    $('#bExj').onclick = () => dl(P.name + '.er.json', JSON.stringify({ schemaVersion: 1, project: P }, null, 1));
+    $('#bExs').onclick = () => {
+      if (!P.nodes.length) return alert('نمودار خالی است.'); const BB = bbox(), x0 = BB.x0, y0 = BB.y0, w = BB.w, h = BB.h;
+      const css = '.sh{fill:#fff;stroke:#1d2433;stroke-width:1.6}.tx{font:13px sans-serif;fill:#1d2433;text-anchor:middle;dominant-baseline:central}.ln{stroke:#1d2433;stroke-width:1.6;fill:none}.ln2{stroke:#fff;stroke-width:2.4;fill:none}.hit{display:none}.lb{font:12px sans-serif;fill:#555;text-anchor:middle}.wt{fill:#fff;stroke:#4b6a85;stroke-width:1.2}.wh{fill:#98bfda;stroke:#4b6a85;stroke-width:1.2}.wtx{font:12px sans-serif;fill:#1d2433}.wty{font:11px sans-serif;fill:#666}';
+      const body = $('#vp').innerHTML.replace(/<circle class="hd"[^>]*\/>/g, '').replace(/ class="sel"/g, '').replace(/var\(--ac\)/g, '#1d2433').replace(/var\(--pn\)/g, '#fff').replace(/ style="cursor:move"/g, '');
+      dl(P.name + (wb ? '-workbench' : '') + '.svg', `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x0} ${y0} ${w} ${h}" width="${w}" height="${h}"><style>${css}</style><rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="#fff"/>${body}</svg>`, 'image/svg+xml')
+    };
+    const D = [['نام', 'Name'], ['رابطه', 'Relationship'], ['صفت', 'Attribute'], ['مشتق', 'Derived'], ['نوع', 'Type'], ['حذف', 'Delete'], ['بستن', 'Close'], ['نقش', 'Role'], ['پوشش', 'Coverage'], ['انصراف', 'Cancel'], ['ایجاد', 'Create'], ['باز کردن', 'Open'], ['تکثیر', 'Duplicate'], ['خروجی', 'Export'], ['واگرد', 'Undo'], ['ازنو', 'Redo'], ['شبکه', 'Grid'], ['پروژه‌ها', 'Projects'], ['حذف کن', 'Delete'], ['وارد کن', 'Import'], ['یادداشت', 'Note'], ['تغییر نام', 'Rename'], ['حذف اتصال', 'Delete connection'], ['حذف انتخاب', 'Delete selection'], ['اتصال‌ها', 'Connections'], ['بدون اتصال', 'No connections'], ['اعتبارسنجی', 'Validate'], ['نمایش همه', 'Fit all'], ['نام جدید', 'New name'], ['جست‌وجو', 'Search'], ['آخرین ویرایش', 'Last edited'], ['انتخاب / جابه‌جایی', 'Select / move'], ['اتصال دو عنصر', 'Connect two elements'], ['موجودیت قوی', 'Strong entity'], ['موجودیت ضعیف', 'Weak entity'], ['رابطه شناسایی', 'Identifying relationship'], ['صفت شناسه', 'Key attribute'], ['کلید جزئی', 'Partial key'], ['چندمقداری', 'Multivalued'], ['پروژهٔ جدید', 'New project'], ['پروژهٔ نمونه', 'Sample project'], ['وارد کردن فایل', 'Import file'], ['پشتیبان از همه', 'Back up all'], ['نمونه: ثبت‌نام دانشجو', 'Sample: Student enrollment'],
+    ['طراحی نمودار ER و EER با نمادگذاری Chen. همهٔ پروژه‌ها فقط در همین مرورگر ذخیره می‌شوند؛ از پروژه‌های مهم خروجی بگیرید.', 'Design ER and EER diagrams in Chen notation. Projects are stored only in this browser; export the important ones.'], ['هنوز پروژه‌ای ندارید. با «پروژهٔ جدید» شروع کنید.', 'No projects yet. Start with "New project".'], [' موجودیت · ', ' entities · '], [' رابطه · ', ' relationships · '], [' عنصر · ', ' elements · '], ['توضیحات (اختیاری)', 'Description (optional)'], ['ER برای نمودار پایه است؛ EER ابزار IS-A را هم فعال می‌کند.', 'ER is for basic diagrams; EER also enables IS-A.'], ['حذف «', 'Delete «'], ['»؟', '»?'], ['این پروژه برای همیشه از این مرورگر حذف می‌شود. پروژه‌های دیگر تغییر نمی‌کنند.', 'This project is deleted permanently from this browser. Other projects are not affected.'], [' اتصال به این عنصر نیز حذف می‌شود. با «واگرد» می‌توانید برگردانید.', ' connection(s) to this element are deleted too. Undo restores them.'], ['وارد کردن ', 'Import '], ['پروژه‌ها با شناسهٔ جدید و به‌صورت پروژهٔ تازه اضافه می‌شوند و داده‌های فعلی بازنویسی نمی‌شوند.', 'Projects are added as new projects; existing data is never overwritten.'],
+    ['فایل JSON معتبر نیست.', 'Invalid JSON file.'], ['فایل نسخهٔ Schema ندارد.', 'File has no schema version.'], ['این فایل با نسخهٔ جدیدتری ساخته شده و قابل وارد کردن نیست.', 'File was made by a newer version and cannot be imported.'], ['پروژه‌ای در فایل پیدا نشد.', 'No project found in file.'], ['ساختار پروژه خراب است.', 'Project structure is corrupt.'], ['فایل ارجاع شکسته دارد (اتصال به عنصر ناموجود).', 'File has broken references.'], ['نمودار خالی است.', 'Diagram is empty.'],
+    ['در حال ذخیره…', 'Saving…'], ['ذخیره شد', 'Saved'], ['ذخیره ناموفق بود', 'Save failed'], ['عنصر اول را انتخاب کنید، سپس عنصر دوم', 'Pick the first element, then the second'], ['روی بوم کلیک کنید تا «', 'Click the canvas to add «'], ['» اضافه شود', '»'],
+    ['افزودن سریع صفت (Tab)', 'Quick-add attribute (Tab)'], ['موس را روی عنصر ببرید تا نقطه‌های اتصال ظاهر شوند؛ از نقطه به عنصر دیگر بکشید تا وصل شود (دو موجودیت ⇐ رابطهٔ خودکار). رها کردن در فضای خالی یک صفت می‌سازد. موجودیت را انتخاب کنید و Tab بزنید تا صفت اضافه شود؛ بعد از تایپ نام، Enter صفت بعدی را می‌سازد. دوبار کلیک = تغییر نام.', 'Hover an element to see its connection dots; drag from a dot to another element to connect (two entities ⇒ automatic relationship). Release on empty space to create an attribute. Select an entity and press Tab to add an attribute; Enter after typing a name adds the next one. Double-click = rename.'],
+    ['نوع داده / دامنه', 'Data type / domain'], ['منطق مشتق‌شدن', 'Derivation logic'], [' می‌تواند Null باشد', ' can be Null'], ['هم‌پوشانی', 'Overlap'], ['کامل (Total)', 'Total'], ['ناقص (Partial)', 'Partial'], ['مجزا (Disjoint)', 'Disjoint'], ['همپوشا (Overlapping)', 'Overlapping'], ['یال متصل به زبرنوع باید «زبرنوع» علامت بخورد؛ بقیه یال‌ها زیرنوع‌اند.', 'Mark the edge to the supertype; the others are subtypes.'], ['اتصال: ', 'Connection: '], ['مشارکت الزامی (خط دوتایی)', 'Total participation (double line)'], ['این یال به زبرنوع (Supertype) می‌رسد', 'This edge leads to the supertype'], ['چندی (Cardinality)', 'Cardinality'], ['مثلاً Real [0..20]', 'e.g. Real [0..20]'], ['مثلاً Prerequisite', 'e.g. Prerequisite'], [' خطا، ', ' errors, '], [' هشدار', ' warnings'], ['گزارش اعتبارسنجی', 'Validation report'], ['مشکلی پیدا نشد.', 'No issues found.'],
+    ['عنصر بدون نام', 'Unnamed element'], ['موجودیت بدون صفت', 'Entity without attributes'], ['موجودیت قوی بدون شناسه', 'Strong entity without key'], ['موجودیت ضعیف بدون رابطه شناسایی', 'Weak entity without identifying relationship'], ['مشارکت موجودیت ضعیف الزامی نیست', 'Weak entity participation is not total'], ['موجودیت ضعیف بدون کلید جزئی', 'Weak entity without partial key'], ['رابطه بدون شرکت‌کننده', 'Relationship without participants'], ['رابطه با شرکت‌کنندهٔ ناکافی', 'Relationship with too few participants'], ['نقش تکراری', 'Duplicate role'], ['رابطهٔ بازگشتی با نقش نامشخص', 'Recursive relationship without roles'], ['رابطه شناسایی بدون موجودیت ضعیف', 'Identifying relationship without weak entity'], ['چندی تعیین نشده', 'Cardinality not set'], ['صفت رها', 'Orphan attribute'], ['صفت مشتق بدون توضیح', 'Derived attribute without description'], ['IS-A بدون زبرنوع', 'IS-A without supertype'], ['IS-A بدون زیرنوع', 'IS-A without subtype'], ['عنصر خارج از محدوده', 'Element out of range'], ['نام موجودیت تکراری', 'Duplicate entity name'],
+    [' نام ندارد؛ نام برای شناسایی در مدل لازم است.', ' has no name; a name is required.'], [' صفتی ندارد. ابزار «اتصال» را بین موجودیت و یک صفت بزنید.', ' has no attributes. Drag from its dot or press Tab to add one.'], [' هر نمونه را نمی‌تواند یکتا شناسایی کند. یک صفت شناسه اضافه کنید.', ' cannot uniquely identify its instances. Add a key attribute.'], ['باید از طریق لوزی دوتایی به موجودیت مالک وصل شود.', 'must connect to its owner entity via an identifying relationship.'], ['موجودیت ضعیف باید در رابطه شناسایی مشارکت الزامی داشته باشد.', 'A weak entity must participate totally in its identifying relationship.'], ['یک صفت «کلید جزئی» اضافه کنید.', 'Add a partial-key attribute.'], [' به هیچ موجودیتی وصل نیست.', ' is not connected to any entity.'], ['یک رابطه دست‌کم دو اتصال لازم دارد (رابطهٔ بازگشتی = دو اتصال به یک موجودیت).', 'A relationship needs at least two connections (recursive = two to the same entity).'], ['دو شرکت‌کنندهٔ «', 'Two participants of «'], ['» نقش یکسان دارند.', '» share the same role.'], ['برای هر یال به موجودیت تکراری نقش بگذارید.', 'Give each edge to the repeated entity a role.'], ['لوزی دوتایی باید به یک موجودیت ضعیف وصل شود.', 'The double diamond must connect to a weak entity.'], ['برای «', 'For «'], ['» چندی (1/N/M) هر طرف را مشخص کنید.', '» set the cardinality (1/N/M) of each side.'], ['» به هیچ موجودیت یا رابطه‌ای وصل نیست.', '» is not connected to anything.'], ['منطق مشتق‌شدن «', 'Record how « '], ['» را ثبت کنید.', '» is derived.'], ['یک یال را «زبرنوع» علامت بزنید.', 'Mark one edge as the supertype.'], ['دست‌کم یک زیرنوع وصل کنید.', 'Connect at least one subtype.'], ['با «نمایش همه» آن را پیدا کنید.', 'Use Fit all to find it.'], ['» بیش از یک بار تعریف شده.', '» is defined more than once.']];
+    const M = new Map(D), F = D.filter(([a]) => a.length > 5 || /[«»]/.test(a)).sort((x, y) => y[0].length - x[0].length);
+    function tr(s) { if (lang === 'fa') return s; const t = s.trim(); if (M.has(t)) return s.replace(t, M.get(t)); if (t.startsWith('+ ') && M.has(t.slice(2))) return s.replace(t.slice(2), M.get(t.slice(2))); for (const [a, b] of F) s = s.split(a).join(b); return s }
+    let busy = 0; function apply() { busy = 0; const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), L = []; let n; while (n = w.nextNode()) L.push(n); for (const n of L) { const p = n.parentNode.tagName; if (p === 'SCRIPT' || p === 'STYLE') continue; if (n.__o === undefined) n.__o = n.nodeValue; const v = tr(n.__o); if (n.nodeValue !== v) n.nodeValue = v } document.querySelectorAll('[placeholder]').forEach(e => { e.dataset.o = e.dataset.o || e.placeholder; e.placeholder = tr(e.dataset.o) }) }
+    new MutationObserver(() => { if (!busy) { busy = 1; requestAnimationFrame(apply) } }).observe(document.body, { childList: true, subtree: true, characterData: true });
+    const _al = window.alert.bind(window), _pr = window.prompt.bind(window); window.alert = m => _al(tr(m)); window.prompt = (m, d) => _pr(tr(m), d);
+    function setLang(l) { lang = l; try { localStorage.setItem('erl', l) } catch { } document.documentElement.dir = l === 'fa' ? 'rtl' : 'ltr'; document.documentElement.lang = l; document.querySelectorAll('.bL').forEach(b => b.textContent = l === 'fa' ? 'EN' : 'فا'); P ? (tools(), draw()) : home(); apply() }
+    document.querySelectorAll('.bL').forEach(b => b.onclick = () => setLang(lang === 'fa' ? 'en' : 'fa'));
+    let RO = false; const BASE = 'https://claude.ai/artifact/9ZUbARt3DLeS59nHbAc1B7';
+    D.push(['اشتراک', 'Share'], ['اشتراک‌گذاری (فقط‌خواندنی)', 'Share (read-only)'], ['دانلود .sql', 'Download .sql'], ['کپی', 'Copy'], ['کپی لینک', 'Copy link'], ['کپی شد', 'Copied'], ['لهجه', 'Dialect'], ['خروجی SQL', 'SQL export'], ['ساخت نسخه‌ی من', 'Make my copy'], ['حالت فقط‌خواندنی', 'Read-only view'], ['لینک اشتراک معتبر نیست.', 'Invalid share link.'], [' خطا در مدل هست؛ ممکن است SQL ناقص باشد.', ' errors in the model; the SQL may be incomplete.'], ['این لینک کل پروژه را (فشرده) در خود دارد و بدون سرور کار می‌کند. گیرنده نمودار را فقط‌خواندنی می‌بیند و می‌تواند نسخهٔ خودش را بسازد. خود صفحهٔ برنامه باید برای گیرنده قابل‌دسترسی باشد؛ در غیر این صورت فایل JSON بفرستید.', 'This link contains the whole project (compressed) and needs no server. The recipient sees the diagram read-only and can make their own copy. The app page itself must be accessible to them; otherwise send the JSON file.'], [' نویسه. لینک بسیار بلند است؛ اگر باز نشد از فایل JSON استفاده کنید.', ' characters. The link is very long; if it fails to open use the JSON file.'], [' نویسه', ' characters']);
+    D.push(['نمودار EER مطابق MySQL Workbench', 'EER diagram (MySQL Workbench style)'], ['راهنما', 'Legend'], ['جدول‌ها', 'Tables'], [' ستون', ' columns'], ['کلید اصلی (PK)', 'Primary key (PK)'], ['ستون NOT NULL (لوزی توپر) / Null‌پذیر (لوزی توخالی)', 'NOT NULL column (filled diamond) / nullable (hollow)'], ['قرمز = کلید خارجی (FK)', 'Red = foreign key (FK)'], ['خط پیوسته = رابطهٔ شناسایی‌کننده، خط‌چین = غیرشناسایی', 'Solid = identifying, dashed = non-identifying'], ['پای کلاغی = چند، || = دقیقاً یک، ○| = صفر یا یک', 'Crow\'s foot = many, || = exactly one, o| = zero or one'], ['هر جدول در همان مختصات عنصر متناظر در نمودار Chen قرار دارد. رابطه‌های M:N و صفت‌های چندمقداری به جدول واسط تبدیل می‌شوند و در جای لوزی/بیضی خود قرار می‌گیرند.', 'Each table sits at the coordinates of its Chen element. M:N relationships and multivalued attributes become tables at their original positions.']); M.clear(); D.forEach(([a, b]) => M.set(a, b)); F.length = 0; F.push(...D.filter(([a]) => a.length > 5 || /[«»]/.test(a)).sort((x, y) => y[0].length - x[0].length));
+    async function zip(x, en) { const c = new (en ? CompressionStream : DecompressionStream)('deflate-raw'), w = c.writable.getWriter(); w.write(en ? new TextEncoder().encode(x) : x); w.close(); return new Uint8Array(await new Response(c.readable).arrayBuffer()) }
+    function cpy(el) { el.focus(); el.select(); let ok = false; try { ok = document.execCommand('copy') } catch { } if (!ok && navigator.clipboard) navigator.clipboard.writeText(el.value).catch(() => { }); stat(tr('کپی شد')) }
+    async function shareDlg() {
+      const b = await zip(JSON.stringify(P), 1); let s = ''; for (let i = 0; i < b.length; i += 8192)s += String.fromCharCode(...b.subarray(i, i + 8192)); const link = BASE + '#s' + btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      dlg(`<b>اشتراک‌گذاری (فقط‌خواندنی)</b><p class='mu'>این لینک کل پروژه را (فشرده) در خود دارد و بدون سرور کار می‌کند. گیرنده نمودار را فقط‌خواندنی می‌بیند و می‌تواند نسخهٔ خودش را بسازد. خود صفحهٔ برنامه باید برای گیرنده قابل‌دسترسی باشد؛ در غیر این صورت فایل JSON بفرستید.</p><textarea id='sl' rows='4' readonly style='direction:ltr'>${link}</textarea><p class='mu'>${link.length} نویسه${link.length > 12000 ? '. لینک بسیار بلند است؛ اگر باز نشد از فایل JSON استفاده کنید.' : ''}</p><p><button class='pr' id='scp'>کپی لینک</button> <button id='no'>بستن</button></p>`); $('#scp').onclick = () => cpy($('#sl'))
+    }
+    async function loadShare() { try { const t = location.hash.slice(2).replace(/-/g, '+').replace(/_/g, '/'), bin = atob(t + '='.repeat((4 - t.length % 4) % 4)), p = JSON.parse(new TextDecoder().decode(await zip(Uint8Array.from(bin, c => c.charCodeAt(0)), 0))); if (!Array.isArray(p.nodes) || !Array.isArray(p.edges)) throw 0; RO = true; open(p) } catch { alert('لینک اشتراک معتبر نیست.') } }
+    function genSQL(dia, raw) {
+      const d = { mysql: 0, pg: 1, sqlite: 2 }[dia], q = s => d === 0 ? '`' + s + '`' : '"' + s + '"', N = P.nodes,
+      idf = s => ((s || '').trim().replace(/[^\p{L}\p{N}_]+/gu, '_').replace(/^_+|_+$/g, '')) || 'x',
+      ty = (dt, k) => { const s = (dt || '').toLowerCase(), y = /int/.test(s) ? 'int' : /real|float|decimal|numeric|number|double/.test(s) ? 'real' : /time/.test(s) ? 'ts' : /date/.test(s) ? 'date' : /bool/.test(s) ? 'bool' : s ? 'str' : k ? 'int' : 'str'; return k && y === 'str' && d < 2 ? 'VARCHAR(100)' : { int: ['INT', 'INTEGER', 'INTEGER'], real: ['DECIMAL(10,2)', 'NUMERIC', 'REAL'], ts: ['DATETIME', 'TIMESTAMP', 'TEXT'], date: ['DATE', 'DATE', 'TEXT'], bool: ['BOOLEAN', 'BOOLEAN', 'INTEGER'], str: ['VARCHAR(255)', 'VARCHAR(255)', 'TEXT'] }[y][d] },
+      own = id => nb(P, id).map(z => z[1]).filter(o => ATT.includes(o.type)),
+      leaves = (a, pre, seen) => { seen.add(a.id); const ch = own(a.id).filter(o => !seen.has(o.id)); return ch.length ? ch.flatMap(c => leaves(c, pre + idf(a.name) + '_', seen)) : [{ n: pre + idf(a.name), a }] },
+      T2 = new Map, used = new Set,
+      mk = (k, nm) => { let b = idf(nm), n = b, i = 2; while (used.has(n.toLowerCase())) n = b + '_' + i++; used.add(n.toLowerCase()); const t = { id: k, name: n, cols: [], pk: [], fks: [], uq: [], cm: [], pkc: [] }; T2.set(k, t); return t },
+      col = (t, n, y, nn) => { let c = n, i = 2; while (t.cols.some(x => x.n === c)) c = n + '_' + i++; t.cols.push({ n: c, t: y, nn }); return c },
+      base = y => y.replace(' AUTO_INCREMENT', '').replace('SERIAL', 'INTEGER'),
+      fk = (t, r, pre, nn, del) => { const cs = r.pkc.map(c => col(t, pre + c.n, base(c.t), nn)); t.fks.push({ cs, ref: r.name, rc: r.pkc.map(c => c.n), del }); return cs },
+      acols = (t, at, pk) => at.forEach(a => { if (a.type === 'derived') { t.cm.push('derived: ' + a.name + (a.desc ? ' = ' + a.desc : '')); return } if (a.type === 'multi') return; const k = a.type === 'key' || a.type === 'pkey'; leaves(a, '', new Set).forEach(l => { const c = col(t, l.n, ty(l.a.dt, k), k || !l.a.nullable); k && pk.push(c) }) }),
+      build = (e, st = []) => {
+        if (T2.has(e.id)) return T2.get(e.id); if (st.includes(e.id)) return; const t = mk(e.id, e.name), pk = [], isa = nb(P, e.id).find(([x, o]) => o.type === 'isa' && x.role !== 'super');
+        if (isa) { const sp = nb(P, isa[1].id).find(([x, o]) => x.role === 'super' && ENT.includes(o.type)), s = sp && build(sp[1], [...st, e.id]); if (s) pk.push(...fk(t, s, '', true, true)); else t.cm.push('IS-A: supertype missing') }
+        else if (e.type === 'weak') { nb(P, e.id).filter(([, r]) => r.type === 'idrel').flatMap(([, r]) => nb(P, r.id).map(z => z[1]).filter(o => ENT.includes(o.type) && o.id !== e.id)).forEach(o => { const s = build(o, [...st, e.id]); s && pk.push(...fk(t, s, idf(o.name) + '_', true, true)) }); if (!pk.length) t.cm.push('weak entity: owner missing') }
+        acols(t, own(e.id), isa ? [] : pk);
+        if (!pk.length) { pk.push(col(t, idf(e.name) + '_id', d === 0 ? 'INT AUTO_INCREMENT' : d === 1 ? 'SERIAL' : 'INTEGER', true)); t.cm.push('no key attribute: surrogate key added') }
+        t.pk = pk; t.pkc = pk.map(n => ({ n, t: t.cols.find(c => c.n === n).t })); return t
+      },
+      EN = N.filter(n => ENT.includes(n.type));
+      EN.forEach(e => build(e));
+      EN.forEach(e => { const t = T2.get(e.id); own(e.id).filter(a => a.type === 'multi').forEach(a => { const m = mk(a.id, t.name + '_' + idf(a.name)), pk = fk(m, t, t.name + '_', true, true); leaves(a, '', new Set).forEach(l => pk.push(col(m, l.n, ty(l.a.dt), true))); m.pk = pk; m.cm.push('multivalued attribute ' + a.name) }) });
+      N.filter(n => n.type === 'rel').forEach(r => {
+        const ps = nb(P, r.id).filter(([, o]) => ENT.includes(o.type)).map(([x, o]) => ({ x, o, t: T2.get(o.id), c: (x.card || '').toUpperCase(), ro: x.role ? idf(x.role) : '' })); if (ps.length < 2) return; const ra = own(r.id), one = p => p.c === '1';
+        if (ps.length === 2 && (one(ps[0]) || one(ps[1]))) { const both = one(ps[0]) && one(ps[1]), pa = both ? (ps[0].x.total && !ps[1].x.total ? ps[1] : ps[0]) : (one(ps[0]) ? ps[0] : ps[1]), c = ps.find(p => p !== pa), cs = fk(c.t, pa.t, (pa.ro || (pa.o === c.o ? 'parent' : idf(pa.o.name))) + '_', !!c.x.total, false); c.t.fks.at(-1).rl = r.name; both && c.t.uq.push(cs); acols(c.t, ra, []); c.t.cm.push('relationship ' + r.name + (both ? ' (1:1)' : ' (1:N)')) }
+        else { const t = mk(r.id, r.name), pk = []; ps.forEach(p => pk.push(...fk(t, p.t, (p.ro || idf(p.o.name)) + '_', true, true))); acols(t, ra, []); t.pk = pk; t.cm.push('relationship ' + r.name + (ps.length > 2 ? ' (n-ary)' : ' (M:N)') + (ps.every(p => !p.c) ? ': cardinality not set, treated as M:N' : '')) }
+      });
+      const all = [...T2.values()], bn = new Map(all.map(t => [t.name, t])), out = [], vis = new Set, vs = t => { if (vis.has(t)) return; vis.add(t); t.fks.forEach(f => { const x = bn.get(f.ref); x && x !== t && vs(x) }); out.push(t) }; all.forEach(vs); if (raw) return out;
+      let s = `-- ER Studio · ${P.name} · ${{ mysql: 'MySQL', pg: 'PostgreSQL', sqlite: 'SQLite' }[dia]}\n` + (validate(P).some(x => x.l === 'e') ? '-- WARNING: the model has validation errors; this SQL may be incomplete.\n' : '') + (d === 2 ? 'PRAGMA foreign_keys = ON;\n' : '') + '\n';
+      out.forEach(t => { t.cm.forEach(c => s += '-- ' + c.replace(/\s+/g, ' ') + '\n'); const L = t.cols.map(c => `  ${q(c.n)} ${c.t}${c.nn ? ' NOT NULL' : ''}`); t.pk.length && L.push(`  PRIMARY KEY (${t.pk.map(q).join(', ')})`); t.uq.forEach(u => L.push(`  UNIQUE (${u.map(q).join(', ')})`)); t.fks.forEach(f => L.push(`  FOREIGN KEY (${f.cs.map(q).join(', ')}) REFERENCES ${q(f.ref)} (${f.rc.map(q).join(', ')})${f.del ? ' ON DELETE CASCADE' : ''}`)); s += `CREATE TABLE ${q(t.name)} (\n${L.join(',\n')}\n)${d === 0 ? ' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' : ''};\n\n` }); return s
+    }
+    // $('#bShare').onclick = shareDlg; $('#bCopy').onclick = async () => { const c = clone(P, true); c.name += ' (کپی)'; RO = false; try { location.hash = '' } catch { } await dbPut(c); open(c) };
+    /* ---------- MySQL Workbench EER view ---------- */
+    let wb = false, WBR = [], WBX = 1, wsel = null;
+    const wbSz = t => [Math.max(140, t.name.length * 8 + 40, ...t.cols.map(c => c.n.length * 7 + c.t.length * 6 + 56)), 34 + t.cols.length * 20];
+    function wbData() { let m = []; try { m = genSQL('mysql', 1) } catch (e) { } WBR = m.map(t => { const n = P.nodes.find(n => n.id === t.id) || { x: 0, y: 0 }, [w, h] = wbSz(t); return { t, x: n.x, y: n.y, w, h } }) }
+    function bbox() { if (wb && WBX) { wbData(); WBX = 0 } const a = wb ? WBR.map(r => [r.x - r.w / 2 - 40, r.y - r.h / 2 - 40, r.x + r.w / 2 + 40, r.y + r.h / 2 + 40]) : P.nodes.map(n => [n.x - 110, n.y - 80, n.x + 110, n.y + 80]); if (!a.length) return { x0: 0, y0: 0, w: 200, h: 200 }; const x0 = Math.min(...a.map(r => r[0])), y0 = Math.min(...a.map(r => r[1])), x1 = Math.max(...a.map(r => r[2])), y1 = Math.max(...a.map(r => r[3])); return { x0, y0, w: x1 - x0, h: y1 - y0 } }
+    function fitWb() { const B = bbox(), r = $('#cv').getBoundingClientRect(), k = Math.min(1.5, r.width / B.w, r.height / B.h) || 1; V = { k, x: -B.x0 * k + (r.width - B.w * k) / 2, y: -B.y0 * k + (r.height - B.h * k) / 2 } }
+    function mkr(px, py, ux, uy, k) {
+      const vx = -uy, vy = ux, pt = (d, s = 0) => [px + ux * d + vx * s, py + uy * d + vy * s], bar = d => `M${pt(d, 6)}L${pt(d, -6)}`, circ = d => { const c = pt(d); return `<circle class="ln" style="fill:var(--pn)" cx="${c[0]}" cy="${c[1]}" r="4"/>` }, f = `M${pt(14)}L${pt(0, 7)}M${pt(14)}L${pt(0, -7)}M${pt(14)}L${pt(0)}`;
+      return k === 'oo' ? `<path class="ln" d="${bar(10)}${bar(15)}"/>` : k === 'zo' ? `<path class="ln" d="${bar(10)}"/>${circ(18)}` : `<path class="ln" d="${f}"/>${circ(19)}`
+    }
+    function drawWb() {
+      if (WBX) { wbData(); WBX = 0 } const by = new Map(WBR.map(r => [r.t.name, r])), cnt = {}; let L = '', B = '';
+      WBR.forEach(c => c.t.fks.forEach(f => {
+        const p = by.get(f.ref); if (!p) return; const pk = c.t.pk, idn = f.cs.every(x => pk.includes(x)), one = c.t.uq.includes(f.cs) || (idn && pk.length === f.cs.length), nn = f.cs.every(x => c.t.cols.find(k => k.n === x).nn), key = [p.t.name, c.t.name].sort().join('|'), i = cnt[key] = (cnt[key] || 0) + 1; let d, a, b, u, v, lx, ly;
+        if (p === c) { const x = p.x + p.w / 2, ya = p.y - 12, yb = p.y + 12; d = `M${x},${ya}L${x + 40},${ya}L${x + 40},${yb}L${x},${yb}`; a = [x, ya]; b = [x, yb]; u = [1, 0]; v = [1, 0]; lx = x + 44; ly = p.y }
+        else {
+          const dx = c.x - p.x, dy = c.y - p.y; if (Math.abs(dx) >= (p.w + c.w) / 2 + 24 || Math.abs(dy) < (p.h + c.h) / 2 + 12) { const o = Math.min((i - 1) * 16, Math.min(p.h, c.h) / 2 - 10), s = Math.sign(dx) || 1, x1 = p.x + s * p.w / 2, x2 = c.x - s * c.w / 2, y1 = p.y + o, y2 = c.y + o, m = (x1 + x2) / 2; d = `M${x1},${y1}L${m},${y1}L${m},${y2}L${x2},${y2}`; a = [x1, y1]; b = [x2, y2]; u = [s, 0]; v = [-s, 0]; lx = m + 5; ly = (y1 + y2) / 2 - 5 }
+          else { const o = Math.min((i - 1) * 16, Math.min(p.w, c.w) / 2 - 10), s = Math.sign(dy) || 1, y1 = p.y + s * p.h / 2, y2 = c.y - s * c.h / 2, x1 = p.x + o, x2 = c.x + o, m = (y1 + y2) / 2; d = `M${x1},${y1}L${x1},${m}L${x2},${m}L${x2},${y2}`; a = [x1, y1]; b = [x2, y2]; u = [0, s]; v = [0, -s]; lx = (x1 + x2) / 2 + 5; ly = m - 5 }
+        }
+        L += `<g><path class="ln" d="${d}"${idn ? '' : ' stroke-dasharray="6 4"'}/>${mkr(a[0], a[1], u[0], u[1], nn ? 'oo' : 'zo')}${mkr(b[0], b[1], v[0], v[1], one ? 'zo' : 'zm')}${f.rl ? `<text class="lb" style="text-anchor:start" x="${lx}" y="${ly}">${esc(f.rl)}</text>` : ''}</g>`
+      }));
+      WBR.forEach(r => {
+        const t = r.t, x0 = r.x - r.w / 2, y0 = r.y - r.h / 2, fs = new Set(t.fks.flatMap(f => f.cs));
+        B += `<g direction="ltr" data-wt="${esc(t.name)}" style="cursor:pointer"><rect class="wt" x="${x0}" y="${y0}" width="${r.w}" height="${r.h}"${wsel === t.name ? ' style="stroke:var(--ac);stroke-width:3"' : ''}/><rect class="wh" x="${x0}" y="${y0}" width="${r.w}" height="26"/><text class="wtx" style="font-weight:700;fill:#102030" x="${x0 + 10}" y="${y0 + 14}" dominant-baseline="central">${esc(t.name)}</text>` + t.cols.map((c, i) => {
+          const cy = y0 + 40 + i * 20, cx = x0 + 14, col = fs.has(c.n) ? '#c0392b' : '#2b6cb0', ico = t.pk.includes(c.n) ? `<g transform="translate(${cx} ${cy})"><circle cx="-3" r="3.2" fill="#e0a800" stroke="#8a6500" stroke-width=".8"/><path d="M0 0H7M5 0V3M7 0V2.5" stroke="#8a6500" fill="none" stroke-width="1.4"/></g>` : `<path d="M${cx} ${cy - 4.5}L${cx + 4} ${cy}L${cx} ${cy + 4.5}L${cx - 4} ${cy}Z" fill="${c.nn ? col : 'none'}" stroke="${col}" stroke-width="1.2"/>`;
+          return ico + `<text class="wtx" x="${x0 + 28}" y="${cy}" dominant-baseline="central">${esc(c.n)}</text><text class="wty" text-anchor="end" x="${x0 + r.w - 8}" y="${cy}" dominant-baseline="central">${esc(c.t)}</text>`
+        }).join('') + '</g>'
+      });
+      $('#vp').setAttribute('transform', `translate(${V.x} ${V.y}) scale(${V.k})`); $('#vp').innerHTML = L + B; $('#cv').style.backgroundImage = grid ? `radial-gradient(var(--gr) 1.2px,transparent 1.2px)` : 'none'; $('#cv').style.backgroundSize = `${20 * V.k}px ${20 * V.k}px`; $('#cv').style.backgroundPosition = `${V.x}px ${V.y}px`; wbPanel()
+    }
+    function wbPanel() { const v = validate(P).filter(x => x.l === 'e').length; $('#side').innerHTML = `<b>نمودار EER مطابق MySQL Workbench</b><p class="mu">هر جدول در همان مختصات عنصر متناظر در نمودار Chen قرار دارد. رابطه‌های M:N و صفت‌های چندمقداری به جدول واسط تبدیل می‌شوند و در جای لوزی/بیضی خود قرار می‌گیرند.</p><label>راهنما</label><div class="msg">🔑 کلید اصلی (PK)</div><div class="msg">ستون NOT NULL (لوزی توپر) / Null‌پذیر (لوزی توخالی)</div><div class="msg">قرمز = کلید خارجی (FK)</div><div class="msg">خط پیوسته = رابطهٔ شناسایی‌کننده، خط‌چین = غیرشناسایی</div><div class="msg">پای کلاغی = چند، || = دقیقاً یک، ○| = صفر یا یک</div><label>جدول‌ها (${WBR.length})</label>` + WBR.map(r => `<div class="msg" data-wt="${esc(r.t.name)}"><b>${esc(r.t.name)}</b> · ${r.t.cols.length} ستون</div>`).join('') + (v ? `<p class="msg e">${v} خطا در مدل هست؛ ممکن است SQL ناقص باشد.</p>` : '') }
+    $('#bWb').onclick = function () { wb = !wb; WBX = 1; sel = null; wsel = null; this.classList.toggle('on', wb); $('#ed').classList.toggle('wb', wb); fit(); draw() };
+
+    setLang(lang); if (/^#s[\w-]{20,}$/.test(location.hash)) loadShare();
+  </script>
 </body>
+
 </html>
